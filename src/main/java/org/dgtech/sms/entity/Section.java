@@ -14,29 +14,31 @@ public class Section extends BaseEntity {
 	@Id
     @Column(name = "section_id",length=10)
 	private String section;
-	@Column(length=5)
-	private String gradeId;
-	@Column(length=5)
-	private Long schoolId;
+	@Column(length=50)
+	private String grade;
+	@Column(length=50)
+	private String schoolId;
 	private boolean active;
 	
 	
-	public String getGradeId() {
-		return gradeId;
-	}
-	public void setGrade(String grade) {
-		this.gradeId = grade;
-	}
+	
 	public String getSection() {
 		return section;
 	}
 	public void setSection(String section) {
 		this.section = section;
 	}
-	public Long getSchoolId() {
+	
+	public String getGrade() {
+		return grade;
+	}
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+	public String getSchoolId() {
 		return schoolId;
 	}
-	public void setSchoolId(Long schoolId) {
+	public void setSchoolId(String schoolId) {
 		this.schoolId = schoolId;
 	}
 	public boolean isActive() {
@@ -49,9 +51,7 @@ public class Section extends BaseEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (active ? 1231 : 1237);
-		result = prime * result + ((gradeId == null) ? 0 : gradeId.hashCode());
-		result = prime * result + ((schoolId == null) ? 0 : schoolId.hashCode());
+		result = prime * result + ((grade == null) ? 0 : grade.hashCode());
 		result = prime * result + ((section == null) ? 0 : section.hashCode());
 		return result;
 	}

@@ -37,6 +37,10 @@ import org.dgtech.sms.repo.UserRequestRepo;
 import org.dgtech.sms.repo.grade.GradeRepo;
 import org.dgtech.sms.repo.section.SectionRepo;
 import org.dgtech.sms.sevice.FileUploads;
+import org.dgtech.sms.sevice.GradeService;
+import org.dgtech.sms.sevice.OrganizationService;
+import org.dgtech.sms.sevice.ParentService;
+import org.dgtech.sms.sevice.SectionService;
 import org.dgtech.sms.sevice.StudentParentService;
 import org.dgtech.sms.sevice.StudentService;
 import org.dgtech.sms.sevice.UserService;
@@ -84,8 +88,6 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 	private GradeService gradeService;
 	@Autowired
 	private SectionService sectionService;
-	@Autowired
-	private MasterRepo masterRepo;
 	@Autowired
 	private UserRequestRepo userRequestRepo;
 
@@ -184,10 +186,10 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 		user.setMobile(student.getMobile());
 		user.setActive(true);
 		if (student.getSchoolId() != null) {
-			Organization org = orgservice.getOrganization(student.getSchoolId());
-			Set<Organization> orgs = new HashSet<Organization>();
-			orgs.add(org);
-			user.setOrganizations(orgs);
+//			Organization org = orgservice.getOrganization(student.getSchoolId());
+//			Set<Organization> orgs = new HashSet<Organization>();
+//			orgs.add(org);
+//			user.set;
 		}
 		userService.saveStudentAccount(user);
 		return user;
@@ -244,8 +246,8 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 	private List<UserRequest> getStudentsFromfile(Long schoolId,MultipartFile file) throws Exception {
 		Workbook workbook = null;
 		List<UserRequest> requestList = new ArrayList<UserRequest>();
-		Map<String, Long> gradeMap = null;
-		Map<String,Long> grSection=null;
+		Map<String, String> gradeMap = null;
+		Map<String,String> grSection=null;
 		Set<String> mobiles=null;
 		Set<Integer> studIds=null;
 		try {
@@ -389,7 +391,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 								} else if (!gradeMap.containsKey(request.getGrade())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.STD_REGEX));
 								}else {
-									request.setGradeId(gradeMap.get(request.getGrade()));
+									request.setGrade(gradeMap.get(request.getGrade()));
 								}
 								break;
 							case 16:
@@ -397,7 +399,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.SECTION_NOTEMPTY));
 								}else {
 									request.setSection(cellValueStr);
-									request.setSectionId(grSection.get(request.getGradeId()+"-"+request.getSection()));
+//									request.setSectionId(grSection.get(request.getGrade()+"-"+request.getSection()));
 								}
 								break;
 							case 17:
@@ -469,11 +471,11 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 			dto.setAddress(h.getAddress());
 			dto.setAdmissionNo(h.getAdmissionNo());
 			dto.setBloodGroup(h.getBloodGroup());
-			dto.setBoardId(h.getBoardId());
+//			dto.setBoardId(h.getBoardId());
 			dto.setDisplayName(h.getDisplayName());
 			dto.setDob(h.getDob());
 			dto.setEmail(h.getEmail());
-			dto.setEmergencyContactNo(h.getEmergencyContactNo());
+//			dto.setEmergencyContactNo(h.getEmergencyContactNo());
 			dto.setFatherName(h.getFatherName());
 			dto.setFirstName(h.getFirstName());
 			dto.setGender(h.getGender());
@@ -482,7 +484,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 			dto.setId(h.getId());
 			dto.setIdNumber(h.getIdNumber());
 			dto.setLastName(h.getLastName());
-			dto.setMediumId(h.getMediumId());
+//			dto.setMediumId(h.getMediumId());
 			dto.setMobile(h.getMobile());
 			dto.setMotherName(h.getMotherName());
 			dto.setRollNo(h.getRollNo());

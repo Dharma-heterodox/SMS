@@ -28,13 +28,9 @@ private static final long serialVersionUID = 1L;
     @Column(name = "userrequest_id")
     private Long id;
     private Integer rollNo;
-    @Column(length=3)
-    private Long gradeId;
     @Column(length=6)
     private String grade;
     @Column(length=3)
-    private Long sectionId;
-    @Column(length=4)
     private String section;
     @Column(length=3)
     private Long mediumId;
@@ -105,24 +101,24 @@ private static final long serialVersionUID = 1L;
 	public void setRollNo(Integer rollNo) {
 		this.rollNo = rollNo;
 	}
-	public Long getGradeId() {
-		return gradeId;
-	}
-	public void setGradeId(Long gradeId) {
-		this.gradeId = gradeId;
-	}
+//	public Long getGradeId() {
+//		return gradeId;
+//	}
+//	public void setGradeId(Long gradeId) {
+//		this.gradeId = gradeId;
+//	}
 	public String getGrade() {
 		return grade;
 	}
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
-	public Long getSectionId() {
-		return sectionId;
-	}
-	public void setSectionId(Long sectionId) {
-		this.sectionId = sectionId;
-	}
+//	public Long getSectionId() {
+//		return sectionId;
+//	}
+//	public void setSectionId(Long sectionId) {
+//		this.sectionId = sectionId;
+//	}
 	public String getSection() {
 		return section;
 	}

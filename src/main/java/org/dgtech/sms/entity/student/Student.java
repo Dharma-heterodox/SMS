@@ -9,12 +9,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.dgtech.sms.entity.Organization;
 import org.dgtech.sms.entity.Parent;
 import org.dgtech.sms.entity.Person;
 
@@ -75,6 +78,7 @@ public class Student extends Person {
     private StudentSectionRecord sectionRecord;
     @Column(name="child_order",columnDefinition = "integer default 1")
     private int childOrder;
+    @OneToOne(cascade = CascadeType.ALL)
     
     
     

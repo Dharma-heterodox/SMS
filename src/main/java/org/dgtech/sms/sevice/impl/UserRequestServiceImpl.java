@@ -151,7 +151,7 @@ public class UserRequestServiceImpl implements UserRequestService{
 				student.setFirstName(req.getStudentName());
 				student.setGender(req.getGender());
 				student.setGrade(req.getGrade());
-				student.setGradeId(req.getGradeId());
+//				student.setGradeId(req.getGradeId());
 				student.setLandLine(req.getLandLine());
 				student.setMobile(req.getMobile());
 				student.setReligion(req.getReligion());
@@ -159,13 +159,13 @@ public class UserRequestServiceImpl implements UserRequestService{
 				student.setRTE(req.getRTE());
 				student.setSchoolId(req.getSchoolId());
 				student.setSection(req.getSection());
-				student.setSectionId(req.getSectionId());
+//				student.setSectionId(req.getSectionId());
 				student.setStudId(req.getStudId());
 				sectionRecord.setAcademicYear(Constant.currentAcademicYear);
-				sectionRecord.setGradeId(req.getGradeId());
+//				sectionRecord.setGradeId(req.getGradeId());
 				sectionRecord.setGrade(req.getGrade());
 				sectionRecord.setSection(req.getSection());
-				sectionRecord.setSectionId(req.getSectionId());
+//				sectionRecord.setSectionId(req.getSectionId());
 				sectionRecord.addStudent(student);
 				parent.addChild(student);
 				parents.add(parent);

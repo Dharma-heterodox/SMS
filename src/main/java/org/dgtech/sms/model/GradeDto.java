@@ -3,6 +3,7 @@ package org.dgtech.sms.model;
 import java.util.List;
 
 
+
 public class GradeDto {
 
 	private Long id;
@@ -12,6 +13,7 @@ public class GradeDto {
 	private String title;
 	private String description;
 	private List<SectionDto> sections;
+	private List<SubjectDto> subjects;
 	private boolean active;
 
 	public Long getId() {
@@ -20,6 +22,14 @@ public class GradeDto {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public List<SubjectDto> getSubjects() {
+		return subjects;
+	}
+
+	public void setSubjects(List<SubjectDto> subjects) {
+		this.subjects = subjects;
 	}
 
 	public Long getBoardId() {
