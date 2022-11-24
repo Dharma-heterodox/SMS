@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>{
 	
-	 User findByEmail(String email);
+	    User findByEmail(String email);
 	    User findByUserName(String userName);
 //	    @Query(
 //				  value = "SELECT user FROM User user WHERE user.mobile = ?1 and user.loginId = ?2 and user.active = true")
@@ -22,5 +22,9 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	    @Query(
 				  value = "SELECT user.mobile FROM User user WHERE user.active = true")
 	  Set<String> getMobileBySchool();
+	    
+	    @Query(
+				  value = "SELECT user FROM User user WHERE user.email = ?1 and user.password = ?2 and user.active = true ORDER BY user.id ASC")
+	  User authUser(String email,String password);
 
 }

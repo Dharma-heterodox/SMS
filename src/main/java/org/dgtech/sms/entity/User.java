@@ -37,6 +37,7 @@ public class User extends BaseEntity {
 	@Column(length = 50)
 	private String userType;
 	@Column(length = 50)
+	@Email(message = "Provide proper emil id")
 	private String email;
 	@Column(length = 50)
 	private String mobile;
@@ -72,7 +73,8 @@ public class User extends BaseEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
+	
 	public String getUserName() {
 		return userName;
 	}

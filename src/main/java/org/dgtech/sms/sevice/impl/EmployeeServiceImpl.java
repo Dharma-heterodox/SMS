@@ -226,14 +226,23 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        			break;
 		        		case 2:
 		        			if(isEmpty(cellValueStr)) {
-		        				request.addErrorCode(new EmployeeReqErrors("Employee "+ErrorCodeV.NAME_NOTEMPTY));
+		        				request.addErrorCode(new EmployeeReqErrors("Employee first "+ErrorCodeV.NAME_NOTEMPTY));
 		        			}else if(!cellValueStr.matches(Constant.NAME_REGEX)) {
-		        				request.addErrorCode(new EmployeeReqErrors("EMP "+ErrorCodeV.NAME_REGEX));
+		        				request.addErrorCode(new EmployeeReqErrors("EMP first"+ErrorCodeV.NAME_REGEX));
 		        			}else {
-		        				request.setEmployeeName(cellValueStr);
+		        				request.setFirstName(cellValueStr);
 		        			}
 		        			break;
 		        		case 3:
+		        			if(isEmpty(cellValueStr)) {
+		        				request.addErrorCode(new EmployeeReqErrors("Employee last "+ErrorCodeV.NAME_NOTEMPTY));
+		        			}else if(!cellValueStr.matches(Constant.NAME_REGEX)) {
+		        				request.addErrorCode(new EmployeeReqErrors("EMP last "+ErrorCodeV.NAME_REGEX));
+		        			}else {
+		        				request.setLastName(cellValueStr);
+		        			}
+		        			break;	
+		        		case 4:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.ACCOUNTNO_NOTEMPTY));
 		        			}else if(!cellValueStr.matches(Constant.NUMBER_REGEX)) {
@@ -242,7 +251,7 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        				request.setAccountNo(cellValueStr);
 		        			}
 		        			break;
-		        		case 4:
+		        		case 5:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.AADHAR_NOTEMPTY));
 		        			}else if(!cellValueStr.matches(Constant.AADHAR_REGEX)) {
@@ -251,7 +260,7 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        				request.setAadhaarNo(cellValueStr);
 		        			}
 		        			break;
-		        		case 5:
+		        		case 6:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.GPAY_NOTEMPTY));
 		        			}else if(!cellValueStr.matches(Constant.NUMBER_REGEX)) {
@@ -260,14 +269,14 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        				request.setGrossPay(Long.valueOf(cellValueStr));
 		        			}
 		        			break;
-		        		case 6:
+		        		case 7:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.ACTIVE_NOTEMPTY));
 		        			}else {
 		        				request.setActive(cellValueStr.equals(Constant.YES));
 		        			}
 		        			break;
-		        		case 7:
+		        		case 8:
 //		        			if(cellValueStr != null && cellValueStr.length() > 0) {
 //			        			Date date = null;
 //		        				if(cellValueStr.contains("/")) {
@@ -291,7 +300,7 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        				request.setGender(cellValueStr);
 		        			}
 		        			break;
-		        		case 8:
+		        		case 9:
 		        			Date date = currentCell.getDateCellValue();
 							if (date == null || StringUtils.isEmpty(date)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.DOB_NOTEMPTY));
@@ -300,7 +309,7 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 								request.setDob(localDate);
 							}
 		        			break;	
-		        		case 9:
+		        		case 10:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors("EPF "+ErrorCodeV.NAME_NOTEMPTY));
 		        			}else if(!cellValueStr.matches(Constant.NAME_REGEX)) {
@@ -309,41 +318,14 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        				request.setEpfName(cellValueStr);
 		        			}
 		        			break;
-		        		case 10:
+		        		case 11:
 		        			if(!isEmpty(cellValueStr) && !cellValueStr.matches(Constant.NUMBER_REGEX)) {
 		        				request.addErrorCode(new EmployeeReqErrors("PF "+ErrorCodeV.NO_REGEX));
 		        			}else {
 		        				request.setPfno(cellValueStr==""? null:Integer.valueOf(cellValueStr));
 		        			}
 		        			break;
-//		        		case 11:
-//		        			Date dobdate = currentCell.getDateCellValue();
-//							if (dobdate == null || StringUtils.isEmpty(dobdate)) {
-//								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.DOJ_NOTEMPTY));
-//							}else {
-//								LocalDate localDate = new java.sql.Date(dobdate.getTime()).toLocalDate();
-//								request.setDoj(localDate);
-//							}//PF NO
-//		        			break;
-		        		case 11:
-		        			if(isEmpty(cellValueStr)) {
-		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NAME_NOTEMPTY));
-		        			}else if(!cellValueStr.matches(Constant.NAME_REGEX)) {
-		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NAME_REGEX));
-		        			}else {
-		        				request.setEsiName(cellValueStr);
-		        			}
-		        			break;
 		        		case 12:
-		        			if(isEmpty(cellValueStr)) {
-		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NO_NOTEMPTY));
-		        			}else if(!cellValueStr.matches(Constant.NUMBER_REGEX)) {
-		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NO_REGEX));
-		        			}else {
-		        				request.setPfno(Integer.valueOf(cellValueStr));
-		        			}
-		        			break;
-		        		case 13:
 		        			Date dobdate = currentCell.getDateCellValue();
 							if (dobdate == null || StringUtils.isEmpty(dobdate)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.DOJ_NOTEMPTY));
@@ -352,30 +334,57 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 								request.setDoj(localDate);
 							}//PF NO
 		        			break;
+		        		case 13:
+		        			if(isEmpty(cellValueStr)) {
+		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NAME_NOTEMPTY));
+		        			}else if(!cellValueStr.matches(Constant.NAME_REGEX)) {
+		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NAME_REGEX));
+		        			}else {
+		        				request.setEsiName(cellValueStr);
+		        			}
+		        			break;
 		        		case 14:
-		        			request.setUanNo(cellValueStr);
+		        			if(isEmpty(cellValueStr)) {
+		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NO_NOTEMPTY));
+		        			}else if(!cellValueStr.matches(Constant.NUMBER_REGEX)) {
+		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NO_REGEX));
+		        			}else {
+		        				request.setPfno(Integer.valueOf(cellValueStr));
+		        			}
 		        			break;
 		        		case 15:
+		        			Date dojdate = currentCell.getDateCellValue();
+							if (dojdate == null || StringUtils.isEmpty(dojdate)) {
+								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.DOJ_NOTEMPTY));
+							}else {
+								LocalDate localDate = new java.sql.Date(dojdate.getTime()).toLocalDate();
+								request.setDoj(localDate);
+							}//PF NO
+		        			break;
+		        		case 17:
+		        			request.setUanNo(cellValueStr);
+		        			break;
+		        		case 18:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.QUALF_NOTEMPTY));
 		        			}else {
 		        				request.setQualification(cellValueStr);
 		        			}
 		        			break;
-		        		case 16:
+		        		case 19:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.ADDRESS_NOTEMPTY));
 		        			}else {
 		        				request.setAddressOne(cellValueStr);
 		        			}
 		        			break;
-		        		case 17:
-		        			request.setPincode(cellValueStr==null ? null:Long.valueOf(cellValueStr));
+		        		case 20:
+		        			request.setPincode(cellValueStr==null ? null:Integer.valueOf(cellValueStr));
 		        			break;
-		        		case 18:
+		        		case 21:
 		        			request.setPhoneNumber(cellValueStr);
 		        			break;
-		        		case 19:
+		        		case 22:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.MOBILE_NOTEMPTY));
 		        			}else if(!cellValueStr.matches(Constant.MOBILE_REGEX)) {
@@ -386,42 +395,42 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        				request.setMobile(cellValueStr);
 		        			}
 		        			break;
-		        		case 20:
+		        		case 23:
 		        			if(!isEmpty(cellValueStr)&& !cellValueStr.matches(Constant.MOBILE_REGEX)) {
 		        				request.addErrorCode(new EmployeeReqErrors("Alternate"+ErrorCodeV.MOBILE_REGEX));
 		        			}else {
 		        				request.setAlternateMobile(cellValueStr);
 		        			}
 		        			break;	
-		        		case 21:
+		        		case 24:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.CASTCAT_NOTEMPTY));
 							}else {
 		        				request.setCasteCat(cellValueStr);
 		        			}
 		        			break;
-		        		case 22:
+		        		case 25:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.RELIGION_NOTEMPTY));
 							}else {
 		        				request.setReligion(cellValueStr);
 		        			}
 		        			break;
-		        		case 23:
+		        		case 26:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.CAST_NOTEMPTY));
 							}else {
 		        				request.setCaste(cellValueStr);
 		        			}
 		        			break;
-		        		case 24:
+		        		case 27:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.TYPE_NOTEMPTY));
 							}else {
 		        				request.setEmpType(cellValueStr);
 		        			}
 		        			break;
-		        		case 25:
+		        		case 28:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.TYPEORDER_NOTEMPTY));
 							}else {

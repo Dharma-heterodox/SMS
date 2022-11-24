@@ -34,6 +34,7 @@ public interface Constant {
 	String LANDLINE_REGEX="^[0-9-]{5,15}$";
 	String AADHAR_REGEX="^[0-9]{12,}$";
 	String NUMBER_REGEX="\\d{1,20}";
+	String EMAIL_REGEX ="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 	
 	int REQUEST_FAILED=0;
 	int REQUEST_SUCCESS=1;

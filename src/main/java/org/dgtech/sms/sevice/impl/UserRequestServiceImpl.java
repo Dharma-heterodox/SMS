@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 import org.dgtech.sms.entity.Employee;
 import org.dgtech.sms.entity.Parent;
 import org.dgtech.sms.entity.Role;
@@ -25,6 +26,7 @@ import org.dgtech.sms.repo.UserRequestRepo;
 import org.dgtech.sms.sevice.UserRequestService;
 import org.dgtech.sms.sevice.UserService;
 import org.dgtech.sms.util.Constant;
+import org.dgtech.sms.util.Permissions;
 import org.dgtech.sms.util.Roles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,8 +105,9 @@ public class UserRequestServiceImpl implements UserRequestService{
 				user.setUserName(h.getMotherName());
 				user.setUserType("");
 				user.setLastName(h.getFatherName());
+				user.setEmail(h.getEmailId());
 //				user.setLoginId(h.getStudId());
-				user.setLoginId("");
+				user.setLoginId(h.getEmailId());
 				userList.add(user);
 			});
 		}catch(Exception ex) {
@@ -123,53 +126,63 @@ public class UserRequestServiceImpl implements UserRequestService{
 				StudentSectionRecord sectionRecord=new StudentSectionRecord();
 				UserRequest req=(UserRequest)userReqList.get(i);
 				User user=(User)users.get(i);
-				parent.setAadhaarNo(req.getAadhaarNo());
-				parent.setActive(true);
-				parent.setAlternateMobile(req.getAlternateMobile());
-				parent.setCaste(req.getCaste());
-				parent.setCasteCat(req.getCasteCat());
-				parent.setDisplayName(req.getMotherName());
-				parent.setDob(req.getDob());
-				parent.setGender("FEMALE");
-				parent.setLandLine(req.getLandLine());
-				parent.setMobile(user.getMobile());
-				parent.setRelationship("MOTHER");
-				parent.setReligion(req.getReligion());
-				parent.setSpouseName(req.getFatherName());
-				parent.setUserId(user.getId());
-				student.setAadhaarNo(req.getAadhaarNo());
-				student.setAddress(req.getAddress());
-				student.setAdmissionNo(req.getAdmissionNo());
-				student.setCaste(req.getCaste());
-				student.setCasteCat(req.getCasteCat());
-				student.setDisplayName(req.getStudentName());
-				student.setDob(req.getDob());
-				student.setEmergencyContactNo(req.getAlternateMobile());
-				student.setEmisno(req.getEmisno());
-				student.setExamNo(req.getExamNo());
-				student.setFatherName(req.getFatherName());
-				student.setFirstName(req.getStudentName());
-				student.setGender(req.getGender());
-				student.setGrade(req.getGrade());
-//				student.setGradeId(req.getGradeId());
-				student.setLandLine(req.getLandLine());
-				student.setMobile(req.getMobile());
-				student.setReligion(req.getReligion());
-				student.setRollNo(req.getRollNo());
-				student.setRTE(req.getRTE());
-				student.setSchoolId(req.getSchoolId());
-				student.setSection(req.getSection());
-//				student.setSectionId(req.getSectionId());
-				student.setStudId(req.getStudId());
-				sectionRecord.setAcademicYear(Constant.currentAcademicYear);
-//				sectionRecord.setGradeId(req.getGradeId());
-				sectionRecord.setGrade(req.getGrade());
-				sectionRecord.setSection(req.getSection());
-//				sectionRecord.setSectionId(req.getSectionId());
-				sectionRecord.addStudent(student);
-				parent.addChild(student);
-				parents.add(parent);
-			}
+				try {
+					parent.setFatherAadhaarNo(req.getFatheraadhaarNo());
+					parent.setMotheraadhaarNo(req.getMotheraadhaarNo());
+					parent.setActive(true);
+					parent.setAlternateMobile(req.getAlternateMobile());
+					parent.setCaste(req.getCaste());
+					parent.setCasteCat(req.getCasteCat());
+					parent.setDisplayName(req.getMotherName());
+					parent.setDob(req.getDob());
+					parent.setGender("FEMALE");
+					parent.setLandLine(req.getLandLine());
+					parent.setMobile(user.getMobile());
+					parent.setRelationship("MOTHER");
+					parent.setReligion(req.getReligion());
+					parent.setSpouseName(req.getFatherName());
+					parent.setUserId(user.getId());
+					parent.setAddress(req.getAddress());
+					parent.setPinCode(req.getPincode());
+					student.setAadhaarNo(req.getAadhaarNo());
+					student.setAddress(req.getAddress());
+					student.setAdmissionNo(req.getAdmissionNo());
+					student.setCaste(req.getCaste());
+					student.setCasteCat(req.getCasteCat());
+					student.setDisplayName(req.getFirstName()+" "+req.getLastName());
+					student.setDob(req.getDob());
+					student.setEmergencyContactNo(req.getAlternateMobile());
+					student.setEmisno(req.getEmisno());
+					student.setExamNo(req.getExamNo());
+					student.setFatherName(req.getFatherName());
+					student.setFirstName(req.getFirstName());
+					student.setLastName(req.getLastName());
+					student.setGender(req.getGender());
+					student.setGrade(req.getGrade());
+					student.setPinCode(req.getPincode());
+					student.setLocality(req.getLocality());
+//					student.setGradeId(req.getGradeId());
+					student.setLandLine(req.getLandLine());
+					student.setMobile(req.getMobile());
+					student.setReligion(req.getReligion());
+					student.setRollNo(req.getRollNo());
+					student.setRTE(req.getRTE());
+					student.setSchoolId(req.getSchoolId());
+					student.setSection(req.getSection());
+//					student.setSectionId(req.getSectionId());
+					student.setStudId(req.getStudId());
+					sectionRecord.setAcademicYear(Constant.currentAcademicYear);
+//					sectionRecord.setGradeId(req.getGradeId());
+					sectionRecord.setGrade(req.getGrade());
+					sectionRecord.setSection(req.getSection());
+//					sectionRecord.setSectionId(req.getSectionId());
+					sectionRecord.addStudent(student);
+					parent.addChild(student);
+					parents.add(parent);
+				}catch(Exception cex) {
+					cex.printStackTrace();
+				}
+				}
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -216,15 +229,16 @@ public class UserRequestServiceImpl implements UserRequestService{
 				user.setActive(true);
 				user.setContactNo(h.getMobile());
 				user.setEmergencyContactNo(h.getAlternateMobile());
-				user.setFirstName(h.getEmployeeName());
+				user.setFirstName(h.getFirstName());
 				user.setMobile(h.getMobile());
 				user.setPassword(bCryptPasswordEncoder.encode(Constant.DEFAULT_PASSWORD));
 				user.setRoles(getRoleEntity(h.getTypeOrder(),roleMap));
-				user.setUserName(h.getEmployeeName());
+				user.setUserName(h.getFirstName());
 				user.setUserType("");
-				user.setLastName(h.getEmployeeName());
+				user.setLastName(h.getLastName());
 //				user.setLoginId(h.getEmployeeId());
-				user.setLoginId("");
+				user.setLoginId(h.getEmailId());
+				user.setEmail(h.getEmailId());
 				userList.add(user);
 			});
 		}catch(Exception ex) {
@@ -261,13 +275,16 @@ public class UserRequestServiceImpl implements UserRequestService{
 				emp.setAlternateMobile(req.getAlternateMobile());
 				emp.setCategory(getRoleName(req.getTypeOrder()).name());
 				emp.setDateOfJoin(req.getDoj());
-				emp.setDisplayName(req.getEmployeeName());
+				emp.setDisplayName(req.getFirstName()+" "+req.getLastName());
 				emp.setDob(req.getDob());
 				emp.setGender(req.getGender());
 				emp.setMobile(req.getMobile());
 				emp.setQualification(req.getQualification());
 				emp.setSchoolId(req.getSchoolId());
 				emp.setEmployeeCode(req.getEmployeeId());
+				emp.setFirstName(req.getFirstName());
+				emp.setLastName(req.getLastName());
+				emp.setPinCode(req.getPincode());
 //				emp.setSubCategory(0);
 				emp.setUserId(user.getId());
 				employees.add(emp);
@@ -317,5 +334,22 @@ public class UserRequestServiceImpl implements UserRequestService{
 				return null;
 			}
 	}
+		
+		
+//		private List<String> getPermissionParent(){
+//			List<String> permissions=new ArrayList<String>();
+//			try {
+//				permissions.add(Permissions.homeworkPrem+Permissions.separeator+Permissions.read);
+//				permissions.add(Permissions.consentPrem+Permissions.separeator+Permissions.read);
+//				permissions.add(Permissions.messagePrem+Permissions.separeator+Permissions.read);
+//				permissions.add(Permissions.circularPrem+Permissions.separeator+Permissions.read);
+//				permissions.add(Permissions.timetablePrem+Permissions.separeator+Permissions.read);
+//			}catch(Exception e) {
+//				e.printStackTrace();
+//			}
+//			
+//			return permissions;
+//		}
+		
 
 }

@@ -10,4 +10,6 @@ public interface ParentRepo extends JpaRepository<Parent, Long> {
 
 	//List<Parent> findAllBySchoolId(Long schoolId);
 	Parent findByMobile(String mobile);
+	
+	Parent findByEmail(String email);
 }

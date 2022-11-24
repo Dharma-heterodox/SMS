@@ -47,7 +47,9 @@ private static final long serialVersionUID = 1L;
     @Column(length = 30)
     private String motherName;
     @Column(length = 30)
-    private String studentName;
+    private String firstName;
+    @Column(length = 30)
+    private String LastName;
     @Column(length=3)
     private Long schoolId;
     @Lob
@@ -81,6 +83,19 @@ private static final long serialVersionUID = 1L;
     private String enrollmentNo;
     @OneToMany(cascade = CascadeType.ALL,mappedBy="userRequest",orphanRemoval = true)
     private List<UserRequestErrors> errors=new ArrayList<UserRequestErrors>();
+    @Column(length = 50)
+    private String emailId;
+    @Column(length = 10)
+    private Integer pincode;
+    @Column(length = 50)
+    private String locality;
+    @Column(length = 20)
+    private String FatheraadhaarNo;
+    @Column(length = 20)
+    private String MotheraadhaarNo;
+
+
+ 
     
 	public Long getId() {
 		return id;
@@ -89,11 +104,49 @@ private static final long serialVersionUID = 1L;
 		this.id = id;
 	}
 	
-	public String getStudentName() {
-		return studentName;
+	public String getFatheraadhaarNo() {
+		return FatheraadhaarNo;
 	}
-	public void setStudentName(String studentName) {
-		this.studentName = studentName;
+	public void setFatheraadhaarNo(String fatheraadhaarNo) {
+		FatheraadhaarNo = fatheraadhaarNo;
+	}
+	public String getMotheraadhaarNo() {
+		return MotheraadhaarNo;
+	}
+	public void setMotheraadhaarNo(String motheraadhaarNo) {
+		MotheraadhaarNo = motheraadhaarNo;
+	}
+	public Integer getPincode() {
+		return pincode;
+	}
+	public void setPincode(Integer pincode) {
+		this.pincode = pincode;
+	}
+	
+	public String getLocality() {
+		return locality;
+	}
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+	public String getEmailId() {
+		return emailId;
+	}
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return LastName;
+	}
+	public void setLastName(String lastName) {
+		LastName = lastName;
 	}
 	public Integer getRollNo() {
 		return rollNo;

@@ -10,10 +10,10 @@ public class StudentDto extends Person{
 	private Long id;
     private String idNumber;
     private Integer rollNo;
-    private Long gradeId;
+//    private Long gradeId;
     private String grade;
     private String section;
-    private Long sectionId;
+//    private Long sectionId;
     private String bloodGroup;
     private String fatherName;
     private String motherName;
@@ -108,18 +108,18 @@ public class StudentDto extends Person{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getGradeId() {
-		return gradeId;
-	}
-	public void setGradeId(Long gradeId) {
-		this.gradeId = gradeId;
-	}
-	public Long getSectionId() {
-		return sectionId;
-	}
-	public void setSectionId(Long sectionId) {
-		this.sectionId = sectionId;
-	}
+//	public Long getGradeId() {
+//		return gradeId;
+//	}
+//	public void setGradeId(Long gradeId) {
+//		this.gradeId = gradeId;
+//	}
+//	public Long getSectionId() {
+//		return sectionId;
+//	}
+//	public void setSectionId(Long sectionId) {
+//		this.sectionId = sectionId;
+//	}
 	public String getGrade() {
 		return grade;
 	}

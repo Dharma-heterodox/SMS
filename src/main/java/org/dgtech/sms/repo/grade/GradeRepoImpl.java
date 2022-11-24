@@ -1,5 +1,6 @@
 package org.dgtech.sms.repo.grade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,5 +29,18 @@ public class GradeRepoImpl implements GradeRepoCustom{
 			});
 			return grades;
 		}
+		
+		@Override
+		public List<String> getGradeList(Long schoolId)throws Exception{
+	    	List<String> grades=new ArrayList<String>();
+			TypedQuery<String[]> query=em.createQuery("SELECT gr.grade FROM Grade gr where gr.schoolId=:schoolId ORDER BY gr.grade ASC", String[].class);
+			query.setParameter("schoolId", schoolId);
+			List<String[]> results=query.getResultList();
+			results.forEach(h -> {
+				grades.add((String)h[0]);
+			});
+			return grades;
+		}
+
 
 }

@@ -19,7 +19,7 @@ import org.dgtech.sms.entity.student.Student;
 
 @Entity
 @Table(name = "parent",
-uniqueConstraints = @UniqueConstraint(columnNames= {"UserId","mobile"}))
+uniqueConstraints = @UniqueConstraint(columnNames= {}))
 public class Parent extends Person {
 
 	/**
@@ -43,6 +43,10 @@ public class Parent extends Person {
     private String landLine;
     @OneToMany(cascade = CascadeType.ALL,mappedBy="parent",orphanRemoval = true)
     private List<Student> childList=new ArrayList<Student>(); 
+    @Column(length = 16)
+    private String fatherAadhaarNo;
+    @Column(length = 16)
+    private String MotheraadhaarNo;
     
 	
 	
@@ -51,6 +55,19 @@ public class Parent extends Person {
 	}
 	public void setCasteCat(String casteCat) {
 		this.casteCat = casteCat;
+	}
+	
+	public String getFatherAadhaarNo() {
+		return fatherAadhaarNo;
+	}
+	public void setFatherAadhaarNo(String fatherAadhaarNo) {
+		this.fatherAadhaarNo = fatherAadhaarNo;
+	}
+	public String getMotheraadhaarNo() {
+		return MotheraadhaarNo;
+	}
+	public void setMotheraadhaarNo(String motheraadhaarNo) {
+		MotheraadhaarNo = motheraadhaarNo;
 	}
 	public String getCaste() {
 		return caste;

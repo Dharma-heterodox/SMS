@@ -227,9 +227,13 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 		Map<String,String> grSection=null;
 		Map<String,String> grSubject=null;
 		Map<Integer,Long> employeeMap=null;
+		List<String> sectionList=null;
+		List<String> gradeList=null;
 		List<TeacherMappingRequest> requestList=new ArrayList<TeacherMappingRequest>();
 		try {
 	        workbook = new XSSFWorkbook(file.getInputStream());
+	        gradeList = gradeRepo.getGradeList(schoolId);
+			sectionList = sectionRepo.getGradeSectionList(schoolId);
 	        gradeMap = gradeRepo.getGradeMap(schoolId);
 			grSection= sectionRepo.getGradeSectionMap(schoolId);
 			grSubject=subjectRepo.getGradeSubjectMap(schoolId);
@@ -262,15 +266,15 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 		        			break;
 		        		case 3:
 		        			request.setGrade(cellValueStr);
-		        			request.setGradeId(gradeMap.get(cellValueStr));
+//		        			request.setGradeId(gradeMap.get(cellValueStr));
 		        			break;
 		        		case 4:
 		        			request.setSection(cellValueStr);
-		        			request.setSectionId(grSection.get(request.getGradeId()+"-"+cellValueStr));
+//		        			request.setSectionId(grSection.get(request.getGradeId()+"-"+cellValueStr));
 		        			break;
 		        		case 5:
 		        			request.setSubject(cellValueStr);
-		        			request.setSubjectId(grSubject.get(request.getGradeId()+"-"+cellValueStr));
+		        			request.setSubjectId(grSubject.get(request.getGrade()+"-"+cellValueStr));
 		        			break;
 		        		case 6:
 		        			request.setClassTeacher(cellValueStr.equals("1") ? true:false);

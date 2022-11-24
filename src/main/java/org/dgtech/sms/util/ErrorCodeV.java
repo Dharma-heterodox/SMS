@@ -23,6 +23,7 @@ public interface ErrorCodeV {
 	String STD_NOTEMPTY="Standard should not be empty";
 	String STD_REGEX="Standard not matched";
 	String SECTION_NOTEMPTY="Section should not be empty";
+	String SECTION_NOTMATCHED = "Section not matched";
 	String RTE_NOTEMPTY="RTE should not be empty";
 	String AADHAR_NOTEMPTY="AADHAR number should not be empty";
 	String AADHAR_REGEX="AADHAR no should be 12 digits";
@@ -44,6 +45,9 @@ public interface ErrorCodeV {
 	String TYPE_NOTEMPTY="TYPE should not be empty";
 	String TYPEORDER_NOTEMPTY="Type order should not be empty";
 	String DOJ_NOTEMPTY = "DOJ should not be empty";
+	
+	String EMAIL_NOTEMPTY = "Email Id should not be empty";
+	String EMAIL_NOTVALID = "Email Id not valid";
 	
 	interface Header{
 		int LENGTH=21;

@@ -58,6 +58,37 @@ public class Person extends BaseEntity {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getLocality() {
+		return locality;
+	}
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+	public Integer getPinCode() {
+		return pinCode;
+	}
+	public void setPinCode(Integer pinCode) {
+		this.pinCode = pinCode;
+	}
+	public String getDistrict() {
+		return district;
+	}
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
 	public String getFirstName() {
 		return firstName;
 	}

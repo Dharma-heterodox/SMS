@@ -7,27 +7,27 @@ public class LoginDto implements Serializable {
 	/**
 	 * 
 	 */
+	private String userId;
+	private String password;
 	private static final long serialVersionUID = 1L;
 	
-	private String mobilenumber;
-	private String userCode;
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
+	
 //	private String loginId;
 
-	public String getMobilenumber() {
-		return mobilenumber;
-	}
-
-	public void setMobilenumber(String mobilenumber) {
-		this.mobilenumber = mobilenumber;
-	}
-
-	public String getUserCode() {
-		return userCode;
-	}
-
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
 
 //	public String getLoginId() {
 //		return loginId;

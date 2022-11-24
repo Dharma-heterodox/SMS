@@ -1,5 +1,6 @@
 package org.dgtech.sms.repo.section;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,5 +30,18 @@ public class SectionRepoImpl implements SectionRepoCustom{
 			});
 			return grSection;
 		}
+	 
+	 @Override
+	 public List<String> getGradeSectionList(Long schoolId)throws Exception{
+		 List<String> section=new ArrayList<String>();
+			TypedQuery<String[]> query=em.createQuery("SELECT sc.section FROM Section sc where sc.schoolId=:schoolId ORDER BY sc.section ASC", String[].class);
+			query.setParameter("schoolId", schoolId);
+			List<String[]> results=query.getResultList();
+			results.forEach(h -> {
+				section.add(h[0]);
+			});
+			return section;
+		}
+
 
 }
