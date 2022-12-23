@@ -27,8 +27,8 @@ public interface SchoolRepo extends JpaRepository<Organization, Long>, SchoolCus
 	List<Grade> getGrades(Long schoolId, Long boardId);
 	
 	@Query(
-			  value = "SELECT section FROM Section section WHERE section.schoolId = ?1 and section.gradeId = ?2 and section.active = true")
-	List<Section> getSections(Long schoolId, Long gradeId);
+			  value = "SELECT section FROM Section section WHERE section.schoolId = ?1 and section.grade = ?2 and section.active = true")
+	List<Section> getSections(Long schoolId, String grade);
 	
 	@Query(
 			  value = "SELECT employee FROM Employee employee WHERE employee.schoolId = ?1 and employee.active = true")
@@ -55,11 +55,11 @@ public interface SchoolRepo extends JpaRepository<Organization, Long>, SchoolCus
 	List<Student> getStudents(Long schoolId);
 	
 	@Query(
-			  value = "SELECT teacher FROM TeacherMapping teacher WHERE teacher.schoolId = ?1 and teacher.gradeId = ?2 and teacher.sectionId=?3 and teacher.academicYear=?4  and teacher.active = true")
-	List<TeacherMapping> getTeachers(Long schoolId, Long gradeId, Long sectionId, String academicYear);
+			  value = "SELECT teacher FROM TeacherMapping teacher WHERE teacher.schoolId = ?1 and teacher.grade = ?2 and teacher.section=?3 and teacher.academicYear=?4  and teacher.active = true")
+	List<TeacherMapping> getTeachers(Long schoolId, String grade, String section, String academicYear);
 	
 	@Query(
-			  value = "SELECT teacher FROM TeacherMapping teacher WHERE teacher.schoolId = ?1 and teacher.gradeId = ?2 and teacher.sectionId=?3 and teacher.academicYear=?4 and teacher.subjectId=?5 and teacher.active = true")
-	TeacherMapping getTeacher(Long schoolId, Long gradeId, Long sectionId, String academicYear, Long subjectId);
+			  value = "SELECT teacher FROM TeacherMapping teacher WHERE teacher.schoolId = ?1 and teacher.grade = ?2 and teacher.section=?3 and teacher.academicYear=?4 and teacher.subjectId=?5 and teacher.active = true")
+	TeacherMapping getTeacher(Long schoolId, String grade, String section, String academicYear, Long subjectId);
 	
 }

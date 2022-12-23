@@ -26,7 +26,7 @@ public class ConsentMapping {
 	@Column(name = "student_id")
 	private Long studentId;
 	@Column(name = "section_id")
-	private Long sectionId;
+	private String section;
 	@Column(name = "consent_reply", columnDefinition = "integer default 0",length=2)
 	private int consentReply;
 	@Column(name="start_time")
@@ -58,11 +58,12 @@ public class ConsentMapping {
 	public void setStudentId(Long studentId) {
 		this.studentId = studentId;
 	}
-	public Long getSectionId() {
-		return sectionId;
+	
+	public String getSection() {
+		return section;
 	}
-	public void setSectionId(Long sectionId) {
-		this.sectionId = sectionId;
+	public void setSection(String section) {
+		this.section = section;
 	}
 	public int getConsentReply() {
 		return consentReply;

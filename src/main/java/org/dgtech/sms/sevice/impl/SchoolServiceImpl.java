@@ -114,8 +114,8 @@ public class SchoolServiceImpl implements SchoolService {
 	}
 
 	@Override
-	public List<Section> getSections(Long schoolId, Long gradeId) {
-		return schoolRepo.getSections(schoolId, gradeId);
+	public List<Section> getSections(Long schoolId, String grade) {
+		return schoolRepo.getSections(schoolId, grade);
 	}
 
 	@Override
@@ -145,12 +145,12 @@ public class SchoolServiceImpl implements SchoolService {
 	}
 
 	@Override
-	public List<TeacherMapping> getTeachers(Long schoolId, Long gradeId, Long sectionId, String academicYear) {
-		return schoolRepo.getTeachers(schoolId, gradeId, sectionId, academicYear);
+	public List<TeacherMapping> getTeachers(Long schoolId, String grade, String section, String academicYear) {
+		return schoolRepo.getTeachers(schoolId, grade, section, academicYear);
 	}
 
 	@Override
-	public TeacherMapping getTeacher(Long schoolId, Long gradeId, Long sectionId, String academicYear, Long subject) {
-		return schoolRepo.getTeacher(schoolId, gradeId, sectionId, academicYear, subject);
+	public TeacherMapping getTeacher(Long schoolId, String grade, String section, String academicYear, Long subject) {
+		return schoolRepo.getTeacher(schoolId, grade, section, academicYear, subject);
 	}
 }

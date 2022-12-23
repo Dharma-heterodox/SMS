@@ -21,8 +21,8 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 			  value = "SELECT student FROM Student student where student.schoolId= ?1 and student.admissionNo = ?2")
 	Student findByAdmissionNo(Long schoolId, String admissionNo);
 	
-	@Query(value="SELECT student from Student student where student.sectionId = ?1")
-	List<Student> findAllBySectionId(Long sectionId);
+	@Query(value="SELECT student from Student student where student.section = ?1")
+	List<Student> findAllBySectionId(String section);
 	
 	@Query(value="SELECT student FROM Student student WHERE student.id NOT IN (:ids)")
 	List<Student> findStudentsHWND(@Param("ids")List<Long> studentId);

@@ -2,11 +2,11 @@ package org.dgtech.sms.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="subject_master")
 public class Subject extends BaseEntity {
 
 	/**
@@ -20,7 +20,7 @@ public class Subject extends BaseEntity {
 	@Id
 	@Column(name="subject",length=30)
 	private String subjectName;
-	private String gradeId;
+	private String grade;
 	private Long schoolId;
 	private String title;
 	private String description;
@@ -33,11 +33,12 @@ public class Subject extends BaseEntity {
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
 	}
-	public String getGradeId() {
-		return gradeId;
+	
+	public String getGrade() {
+		return grade;
 	}
-	public void setGradeId(String grade) {
-		this.gradeId = grade;
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 	public Long getSchoolId() {
 		return schoolId;

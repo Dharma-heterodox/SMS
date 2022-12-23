@@ -17,8 +17,10 @@ public class Permission extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "permission_id")
     private Long id;
-    @Column(name = "permission_name",length=100)
-    private String permissionName;
+    @Column(name = "uri",length=200)
+    private String uriName;
+    @Column
+    private String roleAccess;
     
 	public Long getId() {
 		return id;
@@ -26,13 +28,20 @@ public class Permission extends BaseEntity{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getPermissionName() {
-		return permissionName;
-	}
-	public void setPermissionName(String permissionName) {
-		this.permissionName = permissionName;
-	}
 	
+	
+	public String getUriName() {
+		return uriName;
+	}
+	public void setUriName(String uriName) {
+		this.uriName = uriName;
+	}
+	public String getRoleAccess() {
+		return roleAccess;
+	}
+	public void setRoleAccess(String roleAccess) {
+		this.roleAccess = roleAccess;
+	}
 	@Override
 	public int hashCode() {
 		int prime = 31;
@@ -49,8 +58,6 @@ public class Permission extends BaseEntity{
 		if (per == null ) return false;
 		
 		if((per.id == this.id) || (this.id.equals(per.id)) ) return true;
-		
-		if((this.permissionName.equals(per.permissionName))) return true;
 		
 		return false;
 	}

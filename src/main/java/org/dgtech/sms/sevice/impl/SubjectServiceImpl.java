@@ -44,12 +44,12 @@ public class SubjectServiceImpl implements SubjectService {
 	}
 
 	@Override
-	public List<SubjectDto> findAllBySchoolIdAndGradeId(Long schoolId, Long gradeId) {
+	public List<SubjectDto> findAllBySchoolIdAndGradeId(Long schoolId, String grade) {
 		List<Subject> subjects = new ArrayList<Subject>();
-		if(gradeId == null) {
+		if(grade == null) {
 			subjects = subjectRepo.findAllBySchoolId(schoolId);
 		} else {
-			subjects = subjectRepo.findAllBySchoolIdAndGradeId(schoolId, gradeId);
+			subjects = subjectRepo.findAllBySchoolIdAndGradeId(schoolId, grade);
 		}
 		if(CollectionUtils.isEmpty(subjects)) {
 			return null;
@@ -58,12 +58,12 @@ public class SubjectServiceImpl implements SubjectService {
 	}
 
 	@Override
-	public SubjectDto getSubject(Long schoolId, Long gradeId, String subjectName) {
+	public SubjectDto getSubject(Long schoolId, String grade, String subjectName) {
 		Subject subject = null;
-		if(gradeId == null) {
+		if(grade == null) {
 			subject = subjectRepo.findAllBySchoolIdAndSubject(schoolId, subjectName);
 		} else {
-			subject = subjectRepo.findSubject(schoolId, gradeId, subjectName);
+			subject = subjectRepo.findSubject(schoolId, grade, subjectName);
 		}
 		if(subject == null) {
 			return null;
@@ -84,13 +84,13 @@ public class SubjectServiceImpl implements SubjectService {
 //			dto.setGradeId(h.getGradeId());
 			dto.setSubjectName(h.getSubjectName());
 			dto.setTitle(h.getTitle());
-			if(dtoMap.containsKey(h.getGradeId())){
-				List<SubjectDto> dtoList=dtoMap.get(h.getGradeId());
+			if(dtoMap.containsKey(h.getGrade())){
+				List<SubjectDto> dtoList=dtoMap.get(h.getGrade());
 				dtoList.add(dto);
 			}else {
 				List<SubjectDto> dtoList=new ArrayList<SubjectDto>();
 				dtoList.add(dto);
-				dtoMap.put(h.getGradeId(), dtoList);
+				dtoMap.put(h.getGrade(), dtoList);
 			}
 		});
 		return dtoMap;

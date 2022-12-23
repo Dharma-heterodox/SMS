@@ -27,10 +27,6 @@ public class StudentSectionRecord extends BaseEntity{
     private List<Student> studentList=new ArrayList<Student>(); 
 //	@Column(name="student_id")
 //	private Long studentId;
-	@Column(name="section_id")
-	private Long sectionId;
-	@Column(name="grade_id")
-	private Long gradeId;
 	@Column(name="academicyear",length=20)
 	private String academicYear;
 	@Column(name="result",length=20)
@@ -51,18 +47,6 @@ public class StudentSectionRecord extends BaseEntity{
 //	public void setStudentId(Long studentId) {
 //		this.studentId = studentId;
 //	}
-	public Long getSectionId() {
-		return sectionId;
-	}
-	public void setSectionId(Long sectionId) {
-		this.sectionId = sectionId;
-	}
-	public Long getGradeId() {
-		return gradeId;
-	}
-	public void setGradeId(Long gradeId) {
-		this.gradeId = gradeId;
-	}
 	public String getAcademicYear() {
 		return academicYear;
 	}

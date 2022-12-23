@@ -22,8 +22,8 @@ public class SectionRepoImpl implements SectionRepoCustom{
 	 @Override
 	    public Map<String,String> getGradeSectionMap(Long schoolId)throws Exception{
 	    	Map<String, String> grSection=new HashMap<String, String>();
-			TypedQuery<Object[]> query=em.createQuery("SELECT sc.gradeId||'-'||sc.section,sc.section FROM Section sc where sc.schoolId=:schoolId", Object[].class);
-			query.setParameter("schoolId", schoolId);
+			TypedQuery<Object[]> query=em.createQuery("SELECT sc.grade||'-'||sc.section,sc.section FROM Section sc where sc.schoolId=:schoolId", Object[].class);
+			query.setParameter("schoolId", String.valueOf(schoolId));
 			List<Object[]> results=query.getResultList();
 			results.forEach(h -> {
 				grSection.put((String)h[0],(String)h[1]);
@@ -33,14 +33,14 @@ public class SectionRepoImpl implements SectionRepoCustom{
 	 
 	 @Override
 	 public List<String> getGradeSectionList(Long schoolId)throws Exception{
-		 List<String> section=new ArrayList<String>();
-			TypedQuery<String[]> query=em.createQuery("SELECT sc.section FROM Section sc where sc.schoolId=:schoolId ORDER BY sc.section ASC", String[].class);
-			query.setParameter("schoolId", schoolId);
-			List<String[]> results=query.getResultList();
-			results.forEach(h -> {
-				section.add(h[0]);
-			});
-			return section;
+//		 List<String> section=new ArrayList<String>();
+			TypedQuery<String> query=em.createQuery("SELECT sc.section FROM Section sc where sc.schoolId=:schoolId ORDER BY sc.section ASC", String.class);
+			query.setParameter("schoolId", String.valueOf(schoolId));
+			List<String> results=query.getResultList();
+//			results.forEach(h -> {
+//				section.add(h[0]);
+//			});
+			return results;
 		}
 
 

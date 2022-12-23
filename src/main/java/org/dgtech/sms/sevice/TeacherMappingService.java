@@ -11,8 +11,8 @@ public interface TeacherMappingService {
 
 	TeacherMappingDto createTeacherMapping(Long schoolId, TeacherMappingDto teacherMaping);
 	List<TeacherMappingDto> getAllTeacherMappingBySchoolId(Long schoolId);
-	List<TeacherMappingDto> findMappedTeachers(Long schoolId, Long gradeId, Long sectionId, String acadamicYear);
-	TeacherMappingDto getClassTeacher(Long schoolId, Long gradeId, Long sectionId, String academicYear);
+	List<TeacherMappingDto> findMappedTeachers(Long schoolId, String gradeId, String sectionId, String acadamicYear);
+	TeacherMappingDto getClassTeacher(Long schoolId, String gradeId, String sectionId, String academicYear);
 	List<TeacherMappingDto> getAllTeacherMappingByStudentId(Long schoolId, Long studentId, String academicYear);
 	Set<TeacherMappingDto> getTechMapByTeacher(Long teacherId)throws Exception;
 	int upload(Long schoolId,MultipartFile file)throws Exception;

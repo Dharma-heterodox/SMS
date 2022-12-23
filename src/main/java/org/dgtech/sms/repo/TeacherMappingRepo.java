@@ -13,14 +13,14 @@ public interface TeacherMappingRepo extends JpaRepository<TeacherMapping, Long> 
 
 	List<TeacherMapping> findAllBySchoolId(Long schoolId);
 	@Query(
-			  value = "SELECT mapping FROM TeacherMapping mapping WHERE mapping.schoolId = ?1 and mapping.gradeId = ?2 and mapping.sectionId = ?3 and mapping.academicYear = ?4 and mapping.active = true")
-	List<TeacherMapping> findMappedTeachers(Long schoolId, Long gradeId, Long sectionId, String acadamicYear);
+			  value = "SELECT mapping FROM TeacherMapping mapping WHERE mapping.schoolId = ?1 and mapping.grade = ?2 and mapping.section = ?3 and mapping.academicYear = ?4 and mapping.active = true")
+	List<TeacherMapping> findMappedTeachers(Long schoolId, String grade, String section, String acadamicYear);
 	
 	@Query(
 			  value = "SELECT mapping FROM TeacherMapping mapping WHERE mapping.teacherId = ?1 and mapping.academicYear = ?2 and mapping.active = true")
 	List<TeacherMapping> findMapByTeacher(Long teacherId, String acadamicYear);
 	
 	@Query(
-			  value = "SELECT mapping FROM TeacherMapping mapping WHERE mapping.gradeId = ?1 and mapping.academicYear = ?2 and mapping.active = true")
-	List<TeacherMapping> findTeachersSection(Long gradeId,String acadamicYear);
+			  value = "SELECT mapping FROM TeacherMapping mapping WHERE mapping.grade = ?1 and mapping.academicYear = ?2 and mapping.active = true")
+	List<TeacherMapping> findTeachersSection(String gradeId,String acadamicYear);
 }

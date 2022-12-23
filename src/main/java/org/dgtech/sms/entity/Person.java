@@ -38,7 +38,7 @@ public class Person extends BaseEntity {
 	@Column(length = 16)
     private String aadhaarNo;
     @OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name="organization_id",referencedColumnName="id")
+	@JoinColumn(name="organization_id",referencedColumnName="org_id")
 	private Organization organizations;
     @Column(length = 80)
     private String address;

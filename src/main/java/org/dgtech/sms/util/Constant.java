@@ -28,8 +28,9 @@ public interface Constant {
 	int REJECTED=0;
 	
 	String NAME_REGEX="^[A-Za-z. ]{2,30}$";
+	String ALPHA_NUMERIC_REGEX="^[A-Za-z0-9]{2,30}$";
 	String GENDER_REGEX="^[A-Za-z]{3,6}$";
-	String CASTECAT_REGEX="^[A-Za-z]{1,5}$";
+	String CASTECAT_REGEX="^[A-Za-z]{1,50}$";
 	String MOBILE_REGEX="^[0-9]{10}$";
 	String LANDLINE_REGEX="^[0-9-]{5,15}$";
 	String AADHAR_REGEX="^[0-9]{12,}$";

@@ -43,7 +43,7 @@ public class ParentServiceImpl implements ParentService {
 		Parent parent = modelMapper.map(parentDto, Parent.class);
 		parentDto.setActive(true);
 		User user=createParentAccount(parent);
-		parent.setUserId(user.getId());
+		parent.setUserId(user.getUserId());
 		parent = parentRepo.save(parent);
 		return modelMapper.map(parent, ParentDto.class);
 	}
@@ -137,7 +137,6 @@ public class ParentServiceImpl implements ParentService {
 			sdto.setFirstName(h.getFirstName());
 			sdto.setGender(h.getGender());
 			sdto.setGrade(h.getGrade());
-			sdto.setGradeId(h.getGradeId());
 			sdto.setId(h.getId());
 			sdto.setIdNumber(h.getIdNumber());
 			sdto.setLandLine(h.getLandLine());
@@ -147,7 +146,6 @@ public class ParentServiceImpl implements ParentService {
 			sdto.setRTE(h.getRTE());
 			sdto.setSchoolId(h.getSchoolId());
 			sdto.setSection(h.getSection());
-			sdto.setSectionId(h.getSectionId());
 			sdto.setStudId(h.getStudId());
 			sdto.setTitle(h.getTitle());
 			dtoList.add(sdto);

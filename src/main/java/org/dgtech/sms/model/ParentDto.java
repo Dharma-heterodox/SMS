@@ -12,6 +12,8 @@ public class ParentDto extends Person{
     private String caste;
     private String religion;
     private String landLine;
+    private String fathername;
+    private String motherName;
     
 	
 	public String getCasteCat() {
@@ -19,6 +21,19 @@ public class ParentDto extends Person{
 	}
 	public void setCasteCat(String casteCat) {
 		this.casteCat = casteCat;
+	}
+	
+	public String getFathername() {
+		return fathername;
+	}
+	public void setFathername(String fathername) {
+		this.fathername = fathername;
+	}
+	public String getMotherName() {
+		return motherName;
+	}
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
 	}
 	public String getCaste() {
 		return caste;

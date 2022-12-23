@@ -27,16 +27,14 @@ public class User extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private Long id;
+	private Long userId;
 	@Column(name = "user_name", length = 50)
 	@Length(min = 4, message = "*Your user name must have at least 4 characters")
 	@NotEmpty(message = "*Please provide a user name")
 	private String userName;
 	@Column(length = 50)
-	private String passWord;
-	@Column(length = 50)
 	private String userType;
-	@Column(length = 50)
+	@Column(length = 80)
 	@Email(message = "Provide proper emil id")
 	private String email;
 	@Column(length = 50)
@@ -45,7 +43,7 @@ public class User extends BaseEntity {
 	private String emergencyContactNo;
 	@Column(length = 50)
 	private String contactNo;
-	@Column(name = "password")
+	@Column(name = "password",length = 100)
 	@Length(min = 5, message = "*Your password must have at least 5 characters")
 	@NotEmpty(message = "*Please provide your password")
 	private String password;
@@ -66,15 +64,16 @@ public class User extends BaseEntity {
 	private Integer loginDeviceCount;
 	
 
-	public Long getId() {
-		return id;
+	
+	
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
-	
-	
+
 	public String getUserName() {
 		return userName;
 	}
@@ -187,13 +186,6 @@ public class User extends BaseEntity {
 		this.loggedIn = loggedIn;
 	}
 	
-	public String getPassWord() {
-		return passWord;
-	}
-
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
-	}
 
 	public Integer getLoginDeviceCount() {
 		return loginDeviceCount;
@@ -207,8 +199,7 @@ public class User extends BaseEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((active == null) ? 0 : active.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
 		return result;
 	}
@@ -227,10 +218,10 @@ public class User extends BaseEntity {
 				return false;
 		} else if (!active.equals(other.active))
 			return false;
-		if (id == null) {
-			if (other.id != null)
+		if (userId == null) {
+			if (other.userId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!userId.equals(other.userId))
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
@@ -242,7 +233,7 @@ public class User extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", firstName=" + firstName + ", lastName=" + lastName
+		return "User [id=" + userId + ", userName=" + userName + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", active=" + active + "]";
 	}
 

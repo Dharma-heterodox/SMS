@@ -11,7 +11,7 @@ public interface SubjectService {
 	SubjectDto createSubject(Long schoolId, SubjectDto subjectDto);
 
 	List<SubjectDto> getAllSubjectsBySchoolId(Long schoolId);
-	List<SubjectDto> findAllBySchoolIdAndGradeId(Long schoolId, Long gradeId);
-	SubjectDto getSubject(Long schoolId, Long gradeId, String subject);
+	List<SubjectDto> findAllBySchoolIdAndGradeId(Long schoolId, String grade);
+	SubjectDto getSubject(Long schoolId, String grade, String subject);
 	Map<String,List<SubjectDto>> getAllSubjects4Grade(Long schoolId);
 }

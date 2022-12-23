@@ -52,11 +52,11 @@ public class UserService {
     }
     
     public User findById(Long id) {
-    	Optional<User> user = userRepository.findById(id);
-    	if(user != null) {
-    		return user.get();
-    	}
-    	return null;
+    	User user = userRepository.findByUserId(id);
+//    	if(user != null) {
+//    		return user;
+//    	}
+    	return user;
     }
 
     public User saveUser(User user) {

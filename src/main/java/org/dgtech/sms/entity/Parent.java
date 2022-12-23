@@ -19,7 +19,7 @@ import org.dgtech.sms.entity.student.Student;
 
 @Entity
 @Table(name = "parent",
-uniqueConstraints = @UniqueConstraint(columnNames= {}))
+uniqueConstraints = @UniqueConstraint(columnNames= {"email","mobile"}))
 public class Parent extends Person {
 
 	/**
@@ -47,6 +47,11 @@ public class Parent extends Person {
     private String fatherAadhaarNo;
     @Column(length = 16)
     private String MotheraadhaarNo;
+    @Column(length = 50)
+    private String fatherName;
+    @Column(length = 50)
+    private String motherName;
+
     
 	
 	
@@ -57,6 +62,19 @@ public class Parent extends Person {
 		this.casteCat = casteCat;
 	}
 	
+	
+	public String getFatherName() {
+		return fatherName;
+	}
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+	public String getMotherName() {
+		return motherName;
+	}
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
 	public String getFatherAadhaarNo() {
 		return fatherAadhaarNo;
 	}

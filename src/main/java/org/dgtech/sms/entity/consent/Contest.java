@@ -26,7 +26,6 @@ public class Contest extends BaseEntity {
 	private String description;
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private Long gradeId;
 	@Column(length=50)
 	private String grade;
 	@Column(length=50)
@@ -97,12 +96,6 @@ public class Contest extends BaseEntity {
 	}
 	public void setSchoolId(Long schoolId) {
 		this.schoolId = schoolId;
-	}
-	public Long getGradeId() {
-		return gradeId;
-	}
-	public void setGradeId(Long gradeId) {
-		this.gradeId = gradeId;
 	}
 	public Boolean getActive() {
 		return active;

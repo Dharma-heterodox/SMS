@@ -28,13 +28,13 @@ public interface SchoolService {
 //	Feedback addFeedback(Feedback feedback);
 //	List<SchoolBoard> getAvailableBoards(Long schoolId);
 	List<Grade> getGrades(Long schoolId, Long boardId);
-	List<Section> getSections(Long schoolId, Long gradeId);
+	List<Section> getSections(Long schoolId, String grade);
 	List<Employee> getEmployees(Long schoolId);
 //	List<Feedback> getFeedback(Long schoolId);
 	List<Circular> getCircular(Long schoolId);
 //	List<Homework> getHomework(Long schoolId);
 	List<News> getNews(Long schoolId);
 	List<Student> getStudents(Long schoolId);
-	List<TeacherMapping> getTeachers(Long schoolId, Long gradeId, Long sectionId, String academicYear);
-	TeacherMapping getTeacher(Long schoolId, Long gradeId, Long sectionId, String academicYear, Long subject);
+	List<TeacherMapping> getTeachers(Long schoolId, String grade, String section, String academicYear);
+	TeacherMapping getTeacher(Long schoolId, String grade, String section, String academicYear, Long subject);
 }

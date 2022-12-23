@@ -114,29 +114,29 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 				throw new ValidationException("Student already Exist for admission No :" + studentDto.getAdmissionNo());
 			}
 		}
-		if (studentDto.getGradeId() == null && studentDto.getGrade() != null && studentDto.getGrade().length() > 0) {
+		if (studentDto.getGrade() != null && studentDto.getGrade().length() > 0) {
 			GradeDto existingGrade = gradeService.getByGrade(schoolId, studentDto.getGrade());
 			if (existingGrade != null) {
-				studentDto.setGradeId(existingGrade.getId());
+				studentDto.setGrade(null);
 			} else {// Dharma. Need to remove this block after discussing with Ganesh
 				GradeDto grade = new GradeDto();
 				grade.setGrade(studentDto.getGrade());
 				grade = gradeService.saveGradeBySchoolId(schoolId, grade);
-				studentDto.setGradeId(grade.getId());
+				studentDto.setGrade(null);
 			}
 		}
-		if (studentDto.getSectionId() == null && studentDto.getSection() != null
+		if (studentDto.getSection() != null
 				&& studentDto.getSection().length() > 0) {
-			SectionDto existingSection = sectionService.getBySection(schoolId, studentDto.getGradeId(),
+			SectionDto existingSection = sectionService.getBySection(schoolId, null,
 					studentDto.getSection());
 			if (existingSection != null) {
-				studentDto.setSectionId(existingSection.getId());
+				studentDto.setSection(null);
 			} else {
 				SectionDto sectionDto = new SectionDto();
 				sectionDto.setSection(studentDto.getSection());
-				sectionDto.setGradeId(studentDto.getGradeId());
+				sectionDto.setGradeId(null);
 				sectionDto = sectionService.createSection(schoolId, sectionDto);
-				studentDto.setSectionId(sectionDto.getId());
+				studentDto.setSection(null);
 			}
 		}
 		Student student = modelMapper.map(studentDto, Student.class);
@@ -248,13 +248,14 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 		List<UserRequest> requestList = new ArrayList<UserRequest>();
 		List<String> sectionList=null;
 		List<String> gradeList=null;
-		Set<String> mobiles=null;
+//		Set<String> mobiles=null;
+//		Set<String> emails=null;
 		Set<Integer> studIds=null;
 		try {
 			workbook = new XSSFWorkbook(file.getInputStream());
 			gradeList = gradeRepo.getGradeList(schoolId);
 			sectionList = sectionRepo.getGradeSectionList(schoolId);
-			mobiles=userService.getMobileNo();
+//			mobiles=userService.getMobileNo();
 			studIds=studentRepo.getAllStudentsId(schoolId);
 			Sheet datatypeSheet = workbook.getSheetAt(0);
 			int length = datatypeSheet.getLastRowNum();
@@ -270,7 +271,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 						break;
 					request = new UserRequest();
 					cellLevel:
-					for (int j = 1; j < row.getLastCellNum(); j++) {
+					for (int j = 0; j < row.getLastCellNum(); j++) {
 						String cellValueStr =null;
 						try {
 							Cell currentCell = row.getCell(j);
@@ -280,7 +281,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 							if(!isEmpty(cellValueStr) && "END".equals(cellValueStr))
 			        	    	break rowLevel;
 							switch (j) {
-							case 1:
+							case 0:
 								if (isEmpty(cellValueStr)) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.STUDID_NOTEMPTY));
 								}else if(studIds.contains(Integer.valueOf(cellValueStr))) {
@@ -289,10 +290,10 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 								}
 								request.setStudId(Integer.valueOf(cellValueStr));
 								break;
-							case 2:
+							case 1:
 								request.setExamNo(cellValueStr);
 								break;
-							case 3:
+							case 2:
 								String name = StringUtil.fullCapitalize(cellValueStr);
 								request.setFirstName(name);
 								if (isEmpty(request.getFirstName())) {
@@ -301,16 +302,16 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors("Student " + ErrorCodeV.NAME_REGEX));
 								}
 								break;
-							case 4:
+							case 3:
 								String lastName = StringUtil.fullCapitalize(cellValueStr);
-								request.setFirstName(lastName);
+								request.setLastName(lastName);
 								if (isEmpty(request.getLastName())) {
 									request.addUserRequestError(new UserRequestErrors("Student " + ErrorCodeV.NAME_NOTEMPTY));
 								} else if (!request.getLastName().matches(Constant.NAME_REGEX)) {
 									request.addUserRequestError(new UserRequestErrors("Student " + ErrorCodeV.NAME_REGEX));
 								}
 								break;
-							case 5:
+							case 4:
 								request.setGender(StringUtil.fullCapitalize(cellValueStr));
 								if (isEmpty(request.getGender())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.GENDER_NOTEMPTY));
@@ -318,16 +319,14 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.GENDER_REGEX));
 								}
 								break;
-							case 6:
-								Date date = currentCell.getDateCellValue();
-								if (date == null || StringUtils.isEmpty(date)) {
+							case 5:
+								if (isEmpty(cellValueStr)) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.DOB_NOTEMPTY));
 								}else {
-									LocalDate localDate = new java.sql.Date(date.getTime()).toLocalDate();
-									request.setDob(localDate);
+									request.setDob(cellValueStr);
 								}
 								break;
-							case 7:
+							case 6:
 								request.setMotherName(StringUtil.fullCapitalize(cellValueStr));
 								if (isEmpty(request.getMotherName())) {
 									request.addUserRequestError(new UserRequestErrors("Mother " + ErrorCodeV.NAME_NOTEMPTY));
@@ -335,7 +334,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors("Mother " + ErrorCodeV.NAME_REGEX));
 								}
 								break;
-							case 8:
+							case 7:
 								request.setMotheraadhaarNo(cellValueStr);
 								if (isEmpty(request.getMotheraadhaarNo())) {
 									request.addUserRequestError(new UserRequestErrors("Mother aadhar " + ErrorCodeV.AADHAR_NOTEMPTY));
@@ -343,7 +342,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors("Mother aadhar" + ErrorCodeV.AADHAR_REGEX));
 								}
 								break;
-							case 9:
+							case 8:
 								request.setFatherName(StringUtil.fullCapitalize(cellValueStr));
 								if (isEmpty(request.getFatherName())) {
 									request.addUserRequestError(new UserRequestErrors("Father " + ErrorCodeV.NAME_NOTEMPTY));
@@ -351,7 +350,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors("Father " + ErrorCodeV.NAME_REGEX));
 								}
 								break;
-							case 10:
+							case 9:
 								request.setFatheraadhaarNo(cellValueStr);
 								if (isEmpty(request.getFatheraadhaarNo())) {
 									request.addUserRequestError(new UserRequestErrors("Father aadhar " + ErrorCodeV.AADHAR_NOTEMPTY));
@@ -359,7 +358,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors("Father aadhar" + ErrorCodeV.AADHAR_REGEX));
 								}
 								break;	
-							case 11:
+							case 10:
 								request.setCasteCat(cellValueStr);
 								if (isEmpty(request.getCasteCat())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.CASTCAT_NOTEMPTY));
@@ -367,49 +366,50 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.CASTCAT_REGEX));
 								}
 								break;
-							case 12:
+							case 11:
 								request.setCaste(cellValueStr);
 								if (isEmpty(request.getCaste())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.CAST_NOTEMPTY));
 								}
 								break;
-							case 13:
+							case 12:
 								request.setReligion(cellValueStr);
 								if (isEmpty(request.getReligion())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.RELIGION_NOTEMPTY));
 								}
 								break;
-							case 14:
+							case 13:
 								request.setAddress(cellValueStr);
 								if (isEmpty(request.getAddress())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.ADDRESS_NOTEMPTY));
 								}
 								break;
-							case 15:
+							case 14:
 								request.setMobile(cellValueStr);
 								if (isEmpty(request.getMobile())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.MOBILE_NOTEMPTY));
 								} else if (!request.getMobile().matches(Constant.MOBILE_REGEX) ) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.MOBILE_REGEX));
-								}else if(studIdFound && mobiles.contains(request.getMobile())) {
-									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.MOBILE_FOUND));
 								}
+//								else if(studIdFound && mobiles.contains(request.getMobile())) {
+//									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.MOBILE_FOUND));
+//								}
 								break;
-							case 16:
+							case 15:
 								request.setAlternateMobile(cellValueStr);
 								if (!isEmpty(request.getAlternateMobile())
 										&& !request.getAlternateMobile().matches(Constant.MOBILE_REGEX)) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.MOBILE_REGEX));
 								}
 								break;
-							case 17:
+							case 16:
 								request.setLandLine(cellValueStr);
 								if (!isEmpty(request.getLandLine())
 										&& !request.getLandLine().matches(Constant.LANDLINE_REGEX)) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.LANDLINE_REGEX));
 								}
 								break;
-							case 18:
+							case 17:
 								request.setGrade(cellValueStr);
 								if (isEmpty(request.getGrade())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.STD_NOTEMPTY));
@@ -417,7 +417,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.STD_REGEX));
 								}
 								break;
-							case 19:
+							case 18:
 								if (isEmpty(cellValueStr)) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.SECTION_NOTEMPTY));
 								}else if(!sectionList.contains(cellValueStr)){
@@ -426,13 +426,13 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 								}
 								request.setSection(cellValueStr);
 								break;
-							case 20:
+							case 19:
 								request.setRTE(cellValueStr);
 								if (isEmpty(request.getRTE())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.RTE_NOTEMPTY));
 								}
 								break;
-							case 21:
+							case 20:
 								request.setAadhaarNo(cellValueStr);
 								if (isEmpty(request.getAadhaarNo())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.AADHAR_NOTEMPTY));
@@ -440,22 +440,22 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.AADHAR_REGEX));
 								}
 								break;
-							case 22:
+							case 21:
 								request.setEnrollmentNo(cellValueStr);
 								break;
-							case 23:
+							case 22:
 								request.setEmisno(cellValueStr);
 								if (isEmpty(request.getEmisno())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.EMINO_NOTEMPTY));
 								}
-							case 24:
+								break;
+							case 23:
 								request.setEmailId(cellValueStr);
 								if (isEmpty(request.getEmailId())) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.EMAIL_NOTEMPTY));
 								} else if (!request.getEmailId().matches(Constant.EMAIL_REGEX)) {
 									request.addUserRequestError(new UserRequestErrors(ErrorCodeV.EMAIL_NOTVALID));
 								}
-				
 								break;
 							default:
 								break cellLevel;
@@ -473,6 +473,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 					request.setSchoolId(schoolId);
 					request.setRequestedType(Constant.REQUEST_STUDENT);
 					requestList.add(request);
+					
 				} catch (Exception ex) {
 					log.error("Row :" + i + " : " + ex.getMessage());
 				}
@@ -512,7 +513,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 			dto.setFatherName(h.getFatherName());
 			dto.setFirstName(h.getFirstName());
 			dto.setGender(h.getGender());
-			dto.setGradeId(h.getGradeId());
+//			dto.setGradeId(h.getGradeId());
 			dto.setGrade(h.getGrade());
 			dto.setId(h.getId());
 			dto.setIdNumber(h.getIdNumber());
@@ -523,7 +524,7 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 			dto.setRollNo(h.getRollNo());
 			dto.setSchoolId(h.getSchoolId());
 			dto.setSection(h.getSection());
-			dto.setSectionId(h.getSectionId());
+//			dto.setSectionId(h.getSectionId());
 			dto.setChildOrder(h.getChildOrder());
 			dtoList.add(dto);
 		});

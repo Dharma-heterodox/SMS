@@ -1,6 +1,7 @@
 package org.dgtech.sms.sevice.impl;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.ConstraintViolationException;
 
 import org.dgtech.sms.entity.Employee;
 import org.dgtech.sms.entity.Parent;
@@ -26,11 +28,11 @@ import org.dgtech.sms.repo.UserRequestRepo;
 import org.dgtech.sms.sevice.UserRequestService;
 import org.dgtech.sms.sevice.UserService;
 import org.dgtech.sms.util.Constant;
-import org.dgtech.sms.util.Permissions;
 import org.dgtech.sms.util.Roles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,20 +68,23 @@ public class UserRequestServiceImpl implements UserRequestService{
 
 	@Override
 	@Transactional
-	public int createStudentParentAcc(List<Long> ids,Long schoolId) throws Exception {
+	public int createStudentParentAcc(List<Long> ids,Long schoolId,String createdBy) throws Exception {
 		// TODO Auto-generated method stub
 		List<UserRequest> requestedUsers=null;
-		List<User> userList=null;
+		Map<String,User> userMap=null;
 		List<Parent> parentList=null;
 		int result=0;
 		logger.debug("Create student parent acc ::");
 		try {
+			if(createdBy==null) {
+				createdBy="Admin";
+			}
 			requestedUsers=userRequestRepo.getStudentParentReq(schoolId);
 //			requestedUsers=userRequestRepo.getStudentParentReq(ids);
-			userList=userRepo.saveAll(getStuUserObject(requestedUsers));
-			parentList=parentRepo.saveAll(getParents(userList, requestedUsers));
+			userMap=getStuUserObject(requestedUsers,createdBy,userRepo);
+			parentList=getParents(userMap, requestedUsers,parentRepo);
 			if(parentList.size()>0) {
-				result=userRequestRepo.updateReqStatus(Constant.REQUEST_APPROVED,ids);
+				result=userRequestRepo.updateSchoolReqStatus(Constant.REQUEST_APPROVED,schoolId);
 			}
 		}catch(Exception ex) {
 			logger.debug("Exception in createStudentParentAcc");
@@ -89,98 +94,156 @@ public class UserRequestServiceImpl implements UserRequestService{
 		return result;
 	}
 	
-	private List<User> getStuUserObject(List<UserRequest> userReqList) throws Exception{
-		List<User> userList=new ArrayList<User>();
+	private Map<String,User> getStuUserObject(List<UserRequest> userReqList,String createdBy,UserRepository userRepo) throws Exception{
+		Map<String,User> userMap = new HashMap<String,User>();
 		Set<Role> role=getParentRole();
 		try {
 			userReqList.forEach(h -> {
-				User user=new User();
-				user.setActive(true);
-				user.setContactNo(h.getMobile());
-				user.setEmergencyContactNo(h.getAlternateMobile());
-				user.setFirstName(h.getMotherName());
-				user.setMobile(h.getMobile());
-				user.setPassword(bCryptPasswordEncoder.encode(Constant.DEFAULT_PASSWORD));
-				user.setRoles(role);
-				user.setUserName(h.getMotherName());
-				user.setUserType("");
-				user.setLastName(h.getFatherName());
-				user.setEmail(h.getEmailId());
-//				user.setLoginId(h.getStudId());
-				user.setLoginId(h.getEmailId());
-				userList.add(user);
+				Integer oldUser=userRepo.getByEmail(h.getEmailId());
+				if(oldUser!=null && oldUser==0) {
+					User user=new User();
+					user.setActive(true);
+					user.setContactNo(h.getMobile());
+					user.setEmergencyContactNo(h.getAlternateMobile());
+					user.setFirstName(h.getMotherName());
+					user.setMobile(h.getMobile());
+					user.setPassword(bCryptPasswordEncoder.encode(Constant.DEFAULT_PASSWORD));
+					user.setRoles(role);
+					user.setUserName(h.getMotherName());
+					user.setUserType("");
+					user.setLastName(h.getFatherName());
+					user.setEmail(h.getEmailId());
+//					user.setLoginId(h.getStudId());
+					user.setLoginId(h.getEmailId());
+					user.setCreatedBy(createdBy);
+					user.setCreatedTime(LocalDateTime.now());
+					userMap.put(h.getEmailId(), userRepo.saveAndFlush(user)) ;
+				}
+				
 			});
 		}catch(Exception ex) {
 			ex.printStackTrace();
+		}finally {
+			userRepo.flush();
 		}
-		return userList;
+		return userMap;
 		
 	}
-	
-	private List<Parent> getParents(List<User> users,List<UserRequest> userReqList)throws Exception{
+//	Save user object in map , send to this method and process the remaining
+	private List<Parent> getParents(Map<String,User> users,List<UserRequest> userReqList,ParentRepo repo)throws Exception{
 		List<Parent> parents=new ArrayList<Parent>();
 		try {
 			for(int i=0;i<userReqList.size();i++) {
-				Parent parent=new Parent();
-				Student student=new Student();
-				StudentSectionRecord sectionRecord=new StudentSectionRecord();
 				UserRequest req=(UserRequest)userReqList.get(i);
-				User user=(User)users.get(i);
 				try {
-					parent.setFatherAadhaarNo(req.getFatheraadhaarNo());
-					parent.setMotheraadhaarNo(req.getMotheraadhaarNo());
-					parent.setActive(true);
-					parent.setAlternateMobile(req.getAlternateMobile());
-					parent.setCaste(req.getCaste());
-					parent.setCasteCat(req.getCasteCat());
-					parent.setDisplayName(req.getMotherName());
-					parent.setDob(req.getDob());
-					parent.setGender("FEMALE");
-					parent.setLandLine(req.getLandLine());
-					parent.setMobile(user.getMobile());
-					parent.setRelationship("MOTHER");
-					parent.setReligion(req.getReligion());
-					parent.setSpouseName(req.getFatherName());
-					parent.setUserId(user.getId());
-					parent.setAddress(req.getAddress());
-					parent.setPinCode(req.getPincode());
-					student.setAadhaarNo(req.getAadhaarNo());
-					student.setAddress(req.getAddress());
-					student.setAdmissionNo(req.getAdmissionNo());
-					student.setCaste(req.getCaste());
-					student.setCasteCat(req.getCasteCat());
-					student.setDisplayName(req.getFirstName()+" "+req.getLastName());
-					student.setDob(req.getDob());
-					student.setEmergencyContactNo(req.getAlternateMobile());
-					student.setEmisno(req.getEmisno());
-					student.setExamNo(req.getExamNo());
-					student.setFatherName(req.getFatherName());
-					student.setFirstName(req.getFirstName());
-					student.setLastName(req.getLastName());
-					student.setGender(req.getGender());
-					student.setGrade(req.getGrade());
-					student.setPinCode(req.getPincode());
-					student.setLocality(req.getLocality());
-//					student.setGradeId(req.getGradeId());
-					student.setLandLine(req.getLandLine());
-					student.setMobile(req.getMobile());
-					student.setReligion(req.getReligion());
-					student.setRollNo(req.getRollNo());
-					student.setRTE(req.getRTE());
-					student.setSchoolId(req.getSchoolId());
-					student.setSection(req.getSection());
-//					student.setSectionId(req.getSectionId());
-					student.setStudId(req.getStudId());
-					sectionRecord.setAcademicYear(Constant.currentAcademicYear);
-//					sectionRecord.setGradeId(req.getGradeId());
-					sectionRecord.setGrade(req.getGrade());
-					sectionRecord.setSection(req.getSection());
-//					sectionRecord.setSectionId(req.getSectionId());
-					sectionRecord.addStudent(student);
-					parent.addChild(student);
-					parents.add(parent);
-				}catch(Exception cex) {
-					cex.printStackTrace();
+					User user=users.get(req.getEmailId());
+					Parent oldParent=repo.findByEmail(req.getEmailId());
+					if(oldParent==null) {//First Child
+						Parent parent=new Parent();
+						Student student=new Student();
+						StudentSectionRecord sectionRecord=new StudentSectionRecord();
+						parent.setFatherAadhaarNo(req.getFatheraadhaarNo());
+						parent.setMotheraadhaarNo(req.getMotheraadhaarNo());
+						parent.setActive(true);
+						parent.setAlternateMobile(req.getAlternateMobile());
+						parent.setCaste(req.getCaste());
+						parent.setCasteCat(req.getCasteCat());
+						parent.setDisplayName(req.getMotherName());
+//						parent.setDob(req.getDob());
+						parent.setGender("FEMALE");
+						parent.setLandLine(req.getLandLine());
+						parent.setMobile(user.getMobile());
+						parent.setRelationship("MOTHER");
+						parent.setReligion(req.getReligion());
+//						parent.setSpouseName(req.getFatherName());
+						parent.setUserId(user.getUserId());
+						parent.setAddress(req.getAddress());
+						parent.setPinCode(req.getPincode());
+						parent.setCreatedBy(user.getCreatedBy());
+						parent.setCreatedTime(LocalDateTime.now());
+						parent.setEmail(req.getEmailId());
+						parent.setFatherName(req.getFatherName());
+						parent.setMotherName(req.getMotherName());
+						student.setAadhaarNo(req.getAadhaarNo());
+						student.setAddress(req.getAddress());
+						student.setAdmissionNo(req.getAdmissionNo());
+						student.setCaste(req.getCaste());
+						student.setCasteCat(req.getCasteCat());
+						student.setDisplayName(req.getFirstName()+" "+req.getLastName());
+//						student.setDob(req.getDob());
+						student.setEmergencyContactNo(req.getAlternateMobile());
+						student.setEmisno(req.getEmisno());
+						student.setExamNo(req.getExamNo());
+						student.setFatherName(req.getFatherName());
+						student.setFirstName(req.getFirstName());
+						student.setLastName(req.getLastName());
+						student.setGender(req.getGender());
+						student.setGrade(req.getGrade());
+						student.setPinCode(req.getPincode());
+						student.setLocality(req.getLocality());
+//						student.setGradeId(req.getGradeId());
+						student.setLandLine(req.getLandLine());
+						student.setMobile(req.getMobile());
+						student.setReligion(req.getReligion());
+						student.setRollNo(req.getRollNo());
+						student.setRTE(req.getRTE());
+						student.setSchoolId(req.getSchoolId());
+						student.setSection(req.getSection());
+						student.setCreatedBy(user.getCreatedBy());
+						student.setCreatedTime(LocalDateTime.now());
+//						student.setSectionId(req.getSectionId());
+						student.setStudId(req.getStudId());
+						sectionRecord.setAcademicYear(Constant.currentAcademicYear);
+//						sectionRecord.setGradeId(req.getGradeId());
+						sectionRecord.setGrade(req.getGrade());
+						sectionRecord.setSection(req.getSection());
+//						sectionRecord.setSectionId(req.getSectionId());
+						sectionRecord.addStudent(student);
+						parent.addChild(student);
+						parents.add(repo.saveAndFlush(parent));	
+					}else {//Second Child
+						Student student=new Student();
+						StudentSectionRecord sectionRecord=new StudentSectionRecord();
+						student.setAadhaarNo(req.getAadhaarNo());
+						student.setAddress(req.getAddress());
+						student.setAdmissionNo(req.getAdmissionNo());
+						student.setCaste(req.getCaste());
+						student.setCasteCat(req.getCasteCat());
+						student.setDisplayName(req.getFirstName()+" "+req.getLastName());
+//						student.setDob(req.getDob());
+						student.setEmergencyContactNo(req.getAlternateMobile());
+						student.setEmisno(req.getEmisno());
+						student.setExamNo(req.getExamNo());
+						student.setFatherName(req.getFatherName());
+						student.setFirstName(req.getFirstName());
+						student.setLastName(req.getLastName());
+						student.setGender(req.getGender());
+						student.setGrade(req.getGrade());
+						student.setPinCode(req.getPincode());
+						student.setLocality(req.getLocality());
+//						student.setGradeId(req.getGradeId());
+						student.setLandLine(req.getLandLine());
+						student.setMobile(req.getMobile());
+						student.setReligion(req.getReligion());
+						student.setRollNo(req.getRollNo());
+						student.setRTE(req.getRTE());
+						student.setSchoolId(req.getSchoolId());
+						student.setSection(req.getSection());
+//						student.setSectionId(req.getSectionId());
+						student.setStudId(req.getStudId());
+						student.setCreatedBy(user.getCreatedBy());
+						student.setCreatedTime(LocalDateTime.now());
+						sectionRecord.setAcademicYear(Constant.currentAcademicYear);
+//						sectionRecord.setGradeId(req.getGradeId());
+						sectionRecord.setGrade(req.getGrade());
+						sectionRecord.setSection(req.getSection());
+//						sectionRecord.setSectionId(req.getSectionId());
+						sectionRecord.addStudent(student);
+						oldParent.addChild(student);
+						parents.add(repo.saveAndFlush(oldParent));
+					}
+				}catch(ConstraintViolationException | DataIntegrityViolationException dive) {
+					
 				}
 				}
 		}catch(Exception ex) {
@@ -197,7 +260,7 @@ public class UserRequestServiceImpl implements UserRequestService{
 	
 	@Override
 	@Transactional
-	public int createEmployeeAcc(List<Long> ids,Long schoolId) throws Exception {
+	public int createEmployeeAcc(List<Long> ids,Long schoolId,String createdBy) throws Exception {
 		// TODO Auto-generated method stub
 		List<EmployeeRequest> employeeRequest=null;
 		List<User> userList=null;
@@ -207,7 +270,7 @@ public class UserRequestServiceImpl implements UserRequestService{
 		try {
 //			employeeRequest=employeeReqRepo.getEmployeeReq(schoolId);
 			employeeRequest=employeeReqRepo.getEmployeeReq(ids);
-			userList=userRepo.saveAll(getEmpUserObject(employeeRequest));
+			userList=userRepo.saveAll(getEmpUserObject(employeeRequest,createdBy));
 			empList=empRepo.saveAll(getEmployeeList(employeeRequest,userList ));
 			if(empList.size()>0) {
 				result=employeeReqRepo.updateReqStatus(Constant.REQUEST_APPROVED,ids);
@@ -220,7 +283,7 @@ public class UserRequestServiceImpl implements UserRequestService{
 		return result;
 	}
 	
-	private List<User> getEmpUserObject(List<EmployeeRequest> empReqList) throws Exception{
+	private List<User> getEmpUserObject(List<EmployeeRequest> empReqList,String createdBy) throws Exception{
 		List<User> userList=new ArrayList<User>();
 		Map<String,Role> roleMap=getEmployeeRole();
 		try {
@@ -239,6 +302,8 @@ public class UserRequestServiceImpl implements UserRequestService{
 //				user.setLoginId(h.getEmployeeId());
 				user.setLoginId(h.getEmailId());
 				user.setEmail(h.getEmailId());
+				user.setCreatedBy(createdBy);
+				user.setCreatedTime(LocalDateTime.now());
 				userList.add(user);
 			});
 		}catch(Exception ex) {
@@ -286,7 +351,7 @@ public class UserRequestServiceImpl implements UserRequestService{
 				emp.setLastName(req.getLastName());
 				emp.setPinCode(req.getPincode());
 //				emp.setSubCategory(0);
-				emp.setUserId(user.getId());
+				emp.setUserId(user.getUserId());
 				employees.add(emp);
 			}
 		}catch(Exception ex) {

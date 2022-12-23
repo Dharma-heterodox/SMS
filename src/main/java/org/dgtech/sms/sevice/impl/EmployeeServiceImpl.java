@@ -90,7 +90,7 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		employee.setSchoolId(schoolId);
 		employee.setActive(true);
 		User user=createEmployeeAccount(employeeDto);
-		employee.setUserId(user.getId());
+		employee.setUserId(user.getUserId());
 		employee = employeeRepo.save(employee);
 		EmployeeDto updatedEmployeeDto =  modelMapper.map(employee, EmployeeDto.class);
 		GradeDto grade = null;
@@ -114,13 +114,13 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 				gradeName = gradeName + " Std";
 			}
 			grade = gradeService.getByGrade(schoolId, gradeName);
-			section = sectionService.getBySection(schoolId, grade.getId(), StringUtil.getSection(employeeDto.getClassHandling()));
+			section = sectionService.getBySection(schoolId, grade.getGrade(), StringUtil.getSection(employeeDto.getClassHandling()));
 //			teacherMapping.setGradeId(grade.getId());
 //			teacherMapping.setSectionId(section.getId());
 //			teacherMapping.setSubjectId(subject.getId());
 			teacherMapping.setTeacherId(employee.getId());
 			teacherMapping.setSection(section.getSection());
-			teacherMapping.setSubject(subject.getSubjectName());
+			teacherMapping.setSubjectName(subject.getSubjectName());
 			teacherMapping.setGrade(grade.getGrade());
 			mappingService.createTeacherMapping(schoolId, teacherMapping);
 		}
@@ -349,42 +349,33 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        			}else if(!cellValueStr.matches(Constant.NUMBER_REGEX)) {
 		        				request.addErrorCode(new EmployeeReqErrors("ESI "+ErrorCodeV.NO_REGEX));
 		        			}else {
-		        				request.setPfno(Integer.valueOf(cellValueStr));
+		        				request.setEsiNo(Long.valueOf(cellValueStr));
 		        			}
 		        			break;
 		        		case 15:
-		        			Date dojdate = currentCell.getDateCellValue();
-							if (dojdate == null || StringUtils.isEmpty(dojdate)) {
-								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.DOJ_NOTEMPTY));
-							}else {
-								LocalDate localDate = new java.sql.Date(dojdate.getTime()).toLocalDate();
-								request.setDoj(localDate);
-							}//PF NO
-		        			break;
-		        		case 17:
 		        			request.setUanNo(cellValueStr);
 		        			break;
-		        		case 18:
+		        		case 16:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.QUALF_NOTEMPTY));
 		        			}else {
 		        				request.setQualification(cellValueStr);
 		        			}
 		        			break;
-		        		case 19:
+		        		case 17:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.ADDRESS_NOTEMPTY));
 		        			}else {
 		        				request.setAddressOne(cellValueStr);
 		        			}
 		        			break;
-		        		case 20:
+		        		case 18:
 		        			request.setPincode(cellValueStr==null ? null:Integer.valueOf(cellValueStr));
 		        			break;
-		        		case 21:
+		        		case 19:
 		        			request.setPhoneNumber(cellValueStr);
 		        			break;
-		        		case 22:
+		        		case 20:
 		        			if(isEmpty(cellValueStr)) {
 		        				request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.MOBILE_NOTEMPTY));
 		        			}else if(!cellValueStr.matches(Constant.MOBILE_REGEX)) {
@@ -395,42 +386,43 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        				request.setMobile(cellValueStr);
 		        			}
 		        			break;
-		        		case 23:
+		        		case 21:
 		        			if(!isEmpty(cellValueStr)&& !cellValueStr.matches(Constant.MOBILE_REGEX)) {
 		        				request.addErrorCode(new EmployeeReqErrors("Alternate"+ErrorCodeV.MOBILE_REGEX));
 		        			}else {
 		        				request.setAlternateMobile(cellValueStr);
 		        			}
 		        			break;	
-		        		case 24:
+		        		case 22:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.CASTCAT_NOTEMPTY));
 							}else {
 		        				request.setCasteCat(cellValueStr);
 		        			}
 		        			break;
-		        		case 25:
+		        		case 23:
+		        			if (isEmpty(cellValueStr)) {
+								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.CAST_NOTEMPTY));
+							}else {
+		        				request.setCaste(cellValueStr);
+		        			}
+		        			
+		        			break;
+		        		case 24:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.RELIGION_NOTEMPTY));
 							}else {
 		        				request.setReligion(cellValueStr);
 		        			}
 		        			break;
-		        		case 26:
-		        			if (isEmpty(cellValueStr)) {
-								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.CAST_NOTEMPTY));
-							}else {
-		        				request.setCaste(cellValueStr);
-		        			}
-		        			break;
-		        		case 27:
+		        		case 25:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.TYPE_NOTEMPTY));
 							}else {
 		        				request.setEmpType(cellValueStr);
 		        			}
 		        			break;
-		        		case 28:
+		        		case 26:
 		        			if (isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.TYPEORDER_NOTEMPTY));
 							}else {

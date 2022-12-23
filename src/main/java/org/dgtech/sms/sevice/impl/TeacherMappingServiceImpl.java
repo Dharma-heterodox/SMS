@@ -93,7 +93,7 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 
 	public List<TeacherMappingDto> getAllTeacherMappingByStudentId(Long schoolId, Long studentId, String academicYear) {
 		StudentDto student = studentService.getStudentById(studentId);
-		return findMappedTeachers(schoolId, student.getGradeId(), student.getSectionId(), academicYear == null ? Constant.currentAcademicYear : academicYear);
+		return findMappedTeachers(schoolId, student.getGrade(), student.getSection(), academicYear == null ? Constant.currentAcademicYear : academicYear);
 	}
 
 	@Override
@@ -107,9 +107,9 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 		return modelMapper.map(teacherMapping, TeacherMappingDto.class);
 	}
 	@Override
-	public List<TeacherMappingDto> findMappedTeachers(Long schoolId, Long gradeId, Long sectionId, String academicYear) {
+	public List<TeacherMappingDto> findMappedTeachers(Long schoolId, String gradeId, String sectionId, String academicYear) {
 		List<TeacherMapping> teacherMappings = teacherMappingRepo.findMappedTeachers(schoolId, gradeId, sectionId, academicYear);
-		Map<Long,String> subjectIdMap=null;
+		List<String> subjectIdMap=null;
 		List<TeacherMappingDto> teachers = new ArrayList<TeacherMappingDto>();
 		try {
 			if (teacherMappings == null)
@@ -126,7 +126,6 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 //						break;
 //					}
 //				}
-				mapping.setSubject(subjectIdMap.get(mapping.getSubjectId()));
 				EmployeeDto employee = employeeService.getEmployee(mapping.getTeacherId());
 				String lastName = employee.getLastName() != null ? employee.getLastName(): "";
 				String teacherName = employee.getFirstName() + " " + lastName;
@@ -145,7 +144,7 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 		return teachers;
 	}
 	
-	public TeacherMappingDto getClassTeacher(Long schoolId, Long gradeId, Long sectionId, String academicYear) {
+	public TeacherMappingDto getClassTeacher(Long schoolId, String gradeId, String sectionId, String academicYear) {
 		List<TeacherMappingDto> teacherMappings = findMappedTeachers(schoolId, gradeId, sectionId, academicYear  == null ? Constant.currentAcademicYear : academicYear );
 		TeacherMappingDto teacherMapping = null;
 		if(!CollectionUtils.isEmpty(teacherMappings)) {
@@ -203,7 +202,7 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 				dto.getSubjectList().add(h.getSubjectId());
 				dto.setTeacherId(h.getTeacherId());
 				dto.setSection(h.getSection());
-				dto.setSubject(h.getSubject());
+				dto.setSubjectName(h.getSubject());
 				dto.setGrade(h.getGrade());
 				map.put(h.getSectionId(), dto);
 				teacherMappings.add(dto);

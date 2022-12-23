@@ -13,10 +13,10 @@ public interface SectionRepo extends JpaRepository<Section, Integer>,SectionRepo
 
 	List<Section> findAllBySchoolId(Long schoolId);
 	@Query(
-			  value = "SELECT section FROM Section section WHERE section.schoolId = ?1 and section.gradeId = ?2 and section.active = true ORDER BY section.id ASC")
-	List<Section> findAllBySchoolIdAndGradeId(Long schoolId, Long gradeId);
+			  value = "SELECT section FROM Section section WHERE section.schoolId = ?1 and section.grade = ?2 and section.active = true ORDER BY section.id ASC")
+	List<Section> findAllBySchoolIdAndGradeId(Long schoolId, String grade);
 	@Query(
-			  value = "SELECT section FROM Section section WHERE section.schoolId = ?1 and section.gradeId = ?2 and section.section = ?3 and section.active = true")
-	Section findAllBySchoolIdAndSection(Long schoolId, Long gradeId, String section);
+			  value = "SELECT section FROM Section section WHERE section.schoolId = ?1 and section.grade = ?2 and section.section = ?3 and section.active = true")
+	Section findAllBySchoolIdAndSection(Long schoolId, String grade, String section);
 
 }

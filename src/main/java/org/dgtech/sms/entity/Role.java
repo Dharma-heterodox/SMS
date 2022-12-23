@@ -1,16 +1,10 @@
 package org.dgtech.sms.entity;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,9 +19,9 @@ public class Role extends BaseEntity {
     private Long id;
     @Column(name = "role_name",length=75)
     private String role;
-    @ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "role permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
-	private Set<Permission> permissions;
+//    @ManyToMany(cascade = CascadeType.ALL)
+//	@JoinTable(name = "role permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+//	private Set<Permission> permissions;
     
 	public Long getId() {
 		return id;
@@ -42,12 +36,6 @@ public class Role extends BaseEntity {
 		this.role = role;
 	}
 	
-	public Set<Permission> getPermissions() {
-		return permissions;
-	}
-	public void setPermissions(Set<Permission> permissions) {
-		this.permissions = permissions;
-	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -60,7 +60,7 @@ private static final long serialVersionUID = 1L;
     private int studId;
     @Column(length = 20)
     private String examNo;
-    @Column(length = 5)
+    @Column(length = 50)
     private String casteCat;
     @Column(length = 50)
     private String caste;
@@ -76,7 +76,8 @@ private static final long serialVersionUID = 1L;
     private int requestedType;
     @Column(length=2,name="requested_status")
     private int requestStatus;
-    private LocalDate dob;
+    @Column(length = 30)
+    private String dob;
     @Column(length = 20)
     private String aadhaarNo;
     @Column(length = 50)
@@ -298,10 +299,11 @@ private static final long serialVersionUID = 1L;
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public LocalDate getDob() {
+	
+	public String getDob() {
 		return dob;
 	}
-	public void setDob(LocalDate dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 	public String getAlternateMobile() {

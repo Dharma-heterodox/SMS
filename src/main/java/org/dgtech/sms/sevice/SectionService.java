@@ -13,9 +13,9 @@ public interface SectionService {
 	SectionDto createSection(Long schoolId, @Valid SectionDto sectionDto);
 
 	List<SectionDto> getAllSectionBySchoolId(Long schoolId);
-	List<SectionDto> findAllBySchoolIdAndGradeId(Long schoolId, Long gradeId);
+	List<SectionDto> findAllBySchoolIdAndGrade(Long schoolId, String grade);
 
-	SectionDto getBySection(Long schoolId, Long gradeId, String section);
+	SectionDto getBySection(Long schoolId, String grade, String section);
 	
 	Map<String, List<SectionDto>> getAllBySchool(Long schoolId)throws Exception;
 }

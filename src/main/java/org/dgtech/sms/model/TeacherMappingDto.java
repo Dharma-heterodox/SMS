@@ -13,7 +13,7 @@ public class TeacherMappingDto {
 	private String gradeId;
 	private String sectionId;
 	private String subjectId;
-	private String subject;
+	private String subjectName;
 	private String academicYear;
 	private LocalDate dateFrom;
 	private LocalDate dateTo;
@@ -91,11 +91,12 @@ public class TeacherMappingDto {
 	public void setDateFrom(LocalDate dateFrom) {
 		this.dateFrom = dateFrom;
 	}
-	public String getSubject() {
-		return subject;
+	
+	public String getSubjectName() {
+		return subjectName;
 	}
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
 	public LocalDate getDateTo() {
 		return dateTo;
@@ -140,6 +141,6 @@ public class TeacherMappingDto {
 	@Override
 	public String toString() {
 		return "Organization [id=" + id + ", section=" + sectionId + ", subjectName="
-				+ subject + ", active=" + active + "]";
+				 + ", active=" + active + "]";
 	}
 }

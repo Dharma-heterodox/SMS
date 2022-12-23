@@ -21,7 +21,7 @@ public class SubjectRepoImpl implements SubjectRepoCustom{
 	 @Override
 	    public Map<String,String> getGradeSubjectMap(Long schoolId)throws Exception{
 	    	Map<String, String> grSection=new HashMap<String, String>();
-			TypedQuery<Object[]> query=em.createQuery("SELECT sc.gradeId||'-'||sc.subjectName,sc.subjectName FROM Subject sc where sc.schoolId=:schoolId", Object[].class);
+			TypedQuery<Object[]> query=em.createQuery("SELECT sc.grade||'-'||sc.subjectName,sc.subjectName FROM Subject sc where sc.schoolId=:schoolId", Object[].class);
 			query.setParameter("schoolId", schoolId);
 			List<Object[]> results=query.getResultList();
 			results.forEach(h -> {
@@ -31,15 +31,15 @@ public class SubjectRepoImpl implements SubjectRepoCustom{
 		}
 	 
 	 @Override
-	    public Map<Long,String> getSubjectIdMap(Long schoolId)throws Exception{
-	    	Map<Long, String> grSection=new HashMap<Long, String>();
-			TypedQuery<Object[]> query=em.createQuery("SELECT sc.id,sc.subjectName FROM Subject sc where sc.schoolId=:schoolId", Object[].class);
+	    public List<String> getSubjectIdMap(Long schoolId)throws Exception{
+//	    	Map<Long, String> grSection=new HashMap<Long, String>();
+			TypedQuery<String> query=em.createQuery("SELECT sc.subjectName FROM Subject sc where sc.schoolId=:schoolId", String.class);
 			query.setParameter("schoolId", schoolId);
-			List<Object[]> results=query.getResultList();
-			results.forEach(h -> {
-				grSection.put((Long)h[0],(String)h[1]);
-			});
-			return grSection;
+			List<String> results=query.getResultList();
+//			results.forEach(h -> {
+//				grSection.put((Long)h[0],(String)h[1]);
+//			});
+			return results;
 		}
 
 }

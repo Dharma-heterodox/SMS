@@ -35,10 +35,8 @@ public class Student extends Person {
 	@Column(length=12)
     private String idNumber;
     private Integer rollNo;
-    private Long gradeId;
     @Column(length=6)
     private String grade;
-    private Long sectionId;
     @Column(length=4)
     private String section;
     private Long mediumId;
@@ -62,7 +60,7 @@ public class Student extends Person {
     private int studId;
     @Column(length = 20)
     private String examNo;
-    @Column(length = 5)
+    @Column(length = 50)
     private String casteCat;
     @Column(length = 50)
     private String caste;
@@ -155,18 +153,6 @@ public class Student extends Person {
 	public void setIdNumber(String idCard) {
 		this.idNumber = idCard;
 	}
-	public Long getGradeId() {
-		return gradeId;
-	}
-	public void setGradeId(Long gradeId) {
-		this.gradeId = gradeId;
-	}
-	public Long getSectionId() {
-		return sectionId;
-	}
-	public void setSectionId(Long sectionId) {
-		this.sectionId = sectionId;
-	}
 	public Long getMediumId() {
 		return mediumId;
 	}
@@ -243,7 +229,7 @@ public class Student extends Person {
 	}
 	@Override
 	public String toString() {
-		return "Student [id=" + id + ", studentId=" + idNumber + ", grade=" + gradeId + ", section=" + sectionId
+		return "Student [id=" + id + ", studentId=" + idNumber + ", grade=" + grade + ", section=" + section
 				+ ", bloodGroup=" + bloodGroup + ", emergencyContactNo="
 				+ emergencyContactNo + ", active=" + active + "]";
 	}

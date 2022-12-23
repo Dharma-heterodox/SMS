@@ -40,14 +40,14 @@ public class SectionServiceImpl implements SectionService {
 	}
 
 	@Override
-	public List<SectionDto> findAllBySchoolIdAndGradeId(Long schoolId, Long gradeId) {
+	public List<SectionDto> findAllBySchoolIdAndGrade(Long schoolId, String gradeId) {
 		List<Section> sections = sectionRepo.findAllBySchoolIdAndGradeId(schoolId, gradeId);
 		return sections.stream().map(s -> modelMapper.map(s, SectionDto.class)).collect(Collectors.toList());
 	}
 	
 	@Override
-	public SectionDto getBySection(Long schoolId, Long gradeId, String section) {
-		Section sectionObj = sectionRepo.findAllBySchoolIdAndSection(schoolId, gradeId, section);
+	public SectionDto getBySection(Long schoolId, String grade, String section) {
+		Section sectionObj = sectionRepo.findAllBySchoolIdAndSection(schoolId, grade, section);
 		if (sectionObj == null)
 			return null;
 		return modelMapper.map(sectionObj, SectionDto.class);
