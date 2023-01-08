@@ -222,8 +222,8 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 	
 	private List<TeacherMappingRequest> readFile(Long schoolId,MultipartFile file)throws Exception{
 		Workbook workbook = null;
-		Map<String, String> gradeMap = null;
-		Map<String,String> grSection=null;
+//		Map<String, String> gradeMap = null;
+//		Map<String,String> grSection=null;
 		Map<String,String> grSubject=null;
 		Map<Integer,Long> employeeMap=null;
 		List<String> sectionList=null;
@@ -233,8 +233,8 @@ public class TeacherMappingServiceImpl implements TeacherMappingService,FileUplo
 	        workbook = new XSSFWorkbook(file.getInputStream());
 	        gradeList = gradeRepo.getGradeList(schoolId);
 			sectionList = sectionRepo.getGradeSectionList(schoolId);
-	        gradeMap = gradeRepo.getGradeMap(schoolId);
-			grSection= sectionRepo.getGradeSectionMap(schoolId);
+//	        gradeMap = gradeRepo.getGradeMap(schoolId);
+//			grSection= sectionRepo.getGradeSectionMap(schoolId);
 			grSubject=subjectRepo.getGradeSubjectMap(schoolId);
 			employeeMap=employeeRepo.getEmployeeMap(schoolId);
 	        Sheet datatypeSheet = workbook.getSheetAt(0);

@@ -12,6 +12,22 @@ public class PCAuthResponse {
 	private Set<StudentAuthResponse> students;
 	private Long userId;
 	private String email;
+	private int responseCode;
+	private String errorMsg;
+	
+	
+	public int getResponseCode() {
+		return responseCode;
+	}
+	public void setResponseCode(int responseCode) {
+		this.responseCode = responseCode;
+	}
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
 	public String getFathersName() {
 		return fathersName;
 	}

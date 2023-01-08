@@ -108,59 +108,8 @@ public class StudentServiceImpl implements StudentService,FileUploads {
 
 	@Override
 	public StudentDto createStudent(Long schoolId, StudentDto studentDto) throws Exception {
-		if (studentDto.getAdmissionNo() != null) {
-			Student existingStudent = studentRepo.findByAdmissionNo(schoolId, studentDto.getAdmissionNo());
-			if (existingStudent != null) {
-				throw new ValidationException("Student already Exist for admission No :" + studentDto.getAdmissionNo());
-			}
-		}
-		if (studentDto.getGrade() != null && studentDto.getGrade().length() > 0) {
-			GradeDto existingGrade = gradeService.getByGrade(schoolId, studentDto.getGrade());
-			if (existingGrade != null) {
-				studentDto.setGrade(null);
-			} else {// Dharma. Need to remove this block after discussing with Ganesh
-				GradeDto grade = new GradeDto();
-				grade.setGrade(studentDto.getGrade());
-				grade = gradeService.saveGradeBySchoolId(schoolId, grade);
-				studentDto.setGrade(null);
-			}
-		}
-		if (studentDto.getSection() != null
-				&& studentDto.getSection().length() > 0) {
-			SectionDto existingSection = sectionService.getBySection(schoolId, null,
-					studentDto.getSection());
-			if (existingSection != null) {
-				studentDto.setSection(null);
-			} else {
-				SectionDto sectionDto = new SectionDto();
-				sectionDto.setSection(studentDto.getSection());
-				sectionDto.setGradeId(null);
-				sectionDto = sectionService.createSection(schoolId, sectionDto);
-				studentDto.setSection(null);
-			}
-		}
-		Student student = modelMapper.map(studentDto, Student.class);
-		student.setSchoolId(schoolId);
-		student.setActive(true);
-		student = studentRepo.save(student);
-		createStudentAccount(student);
-		ParentDto parentDto = parentService.getParentByMobile(student.getMobile());
-		if (parentDto == null) {
-			parentDto = new ParentDto();
-			parentDto.setFirstName(studentDto.getFatherName());
-			parentDto.setSpouseName(studentDto.getMotherName());
-			parentDto.setMobile(studentDto.getMobile());
-			parentDto.setAlternateMobile(studentDto.getAlternateMobile());
-			parentDto = parentService.createParent(parentDto);
-
-		}
-		StudentParent stdParent = new StudentParent();
-		stdParent.setParentId(parentDto.getId());
-		stdParent.setStudentId(student.getId());
-		stdParent.setSchoolId(schoolId);
-		stdParent.setSource(student.getSource());
-		studentParentService.createStudentParent(stdParent);
-		return modelMapper.map(student, StudentDto.class);
+		
+		return null;
 	}
 
 	@Override

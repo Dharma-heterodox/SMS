@@ -1,5 +1,10 @@
 package org.dgtech.sms.util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.springframework.format.datetime.DateFormatter;
+
 public interface Constant {
 
 	public String currentAcademicYear = "2021-2022";
@@ -11,7 +16,7 @@ public interface Constant {
 	public String STATUS_VERIFIED= "Verified";
 	public String SMS_SENDER= "MSMSTJ";
 	
-	public String DEFAULT_PASSWORD= "Password$";
+	public String DEFAULT_PASSWORD= "123dgtech";
 	
 	
 	
@@ -43,5 +48,13 @@ public interface Constant {
 	
 	int REQUEST_STUDENT=1;
 	int REQUEST_TEACHER=2;
+	
+	int SUCCESS_REPS=0;
+	int FAILED_RESP=1;
+	
+	DateTimeFormatter dformatter=DateTimeFormatter.ofPattern("d-MM-yyyy");
+	
+	LocalDateTime now= LocalDateTime.now();
+	LocalDateTime last30Days=LocalDateTime.now().minusMonths(1);
 	
 }

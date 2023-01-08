@@ -1,7 +1,18 @@
 package org.dgtech.sms.sevice.impl;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.dgtech.sms.entity.Messages;
+import org.dgtech.sms.entity.NotifyGrade;
+import org.dgtech.sms.model.NotificationDto;
+import org.dgtech.sms.repo.NotificationRepo;
+import org.dgtech.sms.repo.message.MessageRepo;
+import org.dgtech.sms.repo.notifygrade.NotifyGradesRepo;
 import org.dgtech.sms.sevice.MessageService;
 import org.dgtech.sms.sevice.NotificationService;
+import org.dgtech.sms.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +21,15 @@ public class MessageServiceImpl implements MessageService {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private NotificationRepo notificationRepo;
+	
+	@Autowired
+	private MessageRepo messageRepo;
+	
+	@Autowired
+	private NotifyGradesRepo notifyRepo;
 
 //	public boolean sendOTP(String mobileNo) {
 //		List<OneTimePassword> otps = otpRepo.getUserOTPs(mobileNo, Constant.STATUS_SENT);
@@ -43,38 +63,6 @@ public class MessageServiceImpl implements MessageService {
 //		return OTPUtill.checkOTP(mobileNo, code);
 //	}
 	
-//	public boolean verifyOTP(String mobileNo, String code) {
-//		OneTimePassword otp = otpRepo.getOTP(mobileNo, Constant.STATUS_SENT);
-//		System.out.println("--->"+otp);
-//		if(otp != null && LocalDateTime.now().isBefore(otp.getExpiryTime()) 
-//				&& (otp.getCode().equalsIgnoreCase(code) || code.equalsIgnoreCase("555555"))) {
-//			otp.setStatus(Constant.STATUS_VERIFIED);
-//			otpRepo.save(otp);
-//			return true;
-//		}
-//		return false;
-//	}
-//	
-//	private OneTimePassword saveCode(String mobileNo) {
-//		OneTimePassword otp = new OneTimePassword();
-//		otp.setCode(StringUtil.generateOTP(6));
-//		LocalDateTime now = LocalDateTime.now();
-//		now = now.plusMinutes(5);
-//		otp.setExpiryTime(now);
-//		otp.setMobile(mobileNo);
-//		otp.setStatus(Constant.STATUS_PENDING);
-//		return otpRepo.save(otp);
-//	}
-//	
-//	private OneTimePasswordDto generateOTP(String mobileNo) {
-//		OneTimePasswordDto dto=new OneTimePasswordDto();
-//		LocalDateTime now = LocalDateTime.now();
-//		dto.setCode(StringUtil.generateOTP(6));
-//		dto.setExpiryTime(now.plusMinutes(5));
-//		dto.setMobile(mobileNo);
-//		dto.setStatus(Constant.STATUS_PENDING);
-//		return dto;
-//	}
 //	
 	/**
 	 * send code via third party API
@@ -86,5 +74,87 @@ public class MessageServiceImpl implements MessageService {
 	private boolean sendCode(String mobileNo, String code, String formName, Long referenceId) {
 		String msg = "Dear Parent, thanks for using our msms parent connect app. Kindly login using OTP "+ code + " Stay connected!";
 		return notificationService.sendSMS(mobileNo, msg, formName, referenceId);
+	}
+	
+	@Override
+	public int createMsg4App(NotificationDto dto) {
+		int success = Constant.FAILED_RESP;
+		try {
+			Messages msgEntity=getMessagesEntity(dto);
+			messageRepo.saveAndFlush(msgEntity);
+		    success = Constant.SUCCESS_REPS;
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return success;
+		
+	}
+	
+	@Override
+	public List<NotificationDto> getLast30Msg(String selGrade)throws Exception{
+		List<NotificationDto> dtoList=new ArrayList<NotificationDto>(32);
+		String[] selectedGrade = null;
+		List<Long> ntgIds=null;
+		try {
+			selectedGrade= new String [] {"ALL",selGrade};
+			ntgIds=notifyRepo.msgIdValue(selectedGrade);
+			makeDtoList(dtoList, messageRepo.getPCMsg(ntgIds));
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return dtoList;
+	}
+	
+	
+	private Messages getMessagesEntity(NotificationDto dto)throws Exception{
+		Messages notify = new Messages();
+		String grades=dto.getStdSelected();
+		String[] listedGrades=null;
+		notify.setMsgBody(dto.getBody());
+		notify.setCreatedBy(dto.getCreatedBy());
+		notify.setCreatedTime(LocalDateTime.now());
+		notify.setMsgDate(LocalDateTime.now());
+		notify.setListedGrades(grades);
+		notify.setDisplay(true);
+		if(grades!=null && grades.contains(",")) {
+			listedGrades=grades.split(",");
+			for(int i=0;i<listedGrades.length;i++) {
+				notify.addNotifyGrade(makeNotifyGrade(listedGrades[i]));
+			}
+		}else {
+			notify.addNotifyGrade(makeNotifyGrade(grades));
+		}
+		return notify;
+		
+	}
+	
+	private NotifyGrade makeNotifyGrade(String grade)throws Exception{
+		NotifyGrade gradeN=new NotifyGrade();
+			gradeN.setCreatedDate(LocalDateTime.now());
+			gradeN.setDisplay(true);
+			gradeN.setGrade(grade);
+		return gradeN;
+		
+	}
+	
+	private List<Long> getMsgIds(List<NotifyGrade> grds)throws Exception{
+		List<Long> ids=new ArrayList<Long>();
+			grds.forEach(h -> {
+				ids.add(h.getMessageId());
+			});
+		return ids;
+	}
+	
+	private List<NotificationDto> makeDtoList(List<NotificationDto> dtoList,
+			List<Messages> entity)	throws Exception{
+		entity.forEach(h ->{
+			NotificationDto dto=new NotificationDto();
+			dto.setBody(h.getMsgBody());
+			dto.setMsgDate(Constant.dformatter.format(h.getMsgDate()));
+			dto.setId(h.getId());
+			dtoList.add(dto);
+		});
+		return dtoList;
 	}
 }

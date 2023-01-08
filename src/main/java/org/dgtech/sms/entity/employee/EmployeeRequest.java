@@ -41,7 +41,7 @@ public class EmployeeRequest extends BaseEntity{
 	@Column(name="gender",length=10)
 	private String gender;
 
-	private LocalDate dob;
+	private String dob;
 	@Column(name="epf_name",length=50)
 	private String epfName;
 	
@@ -152,10 +152,11 @@ public class EmployeeRequest extends BaseEntity{
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public LocalDate getDob() {
+	
+	public String getDob() {
 		return dob;
 	}
-	public void setDob(LocalDate dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 	public String getEpfName() {

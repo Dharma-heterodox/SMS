@@ -16,6 +16,8 @@ public interface GradeRepo extends JpaRepository<Grade, Integer>,GradeRepoCustom
 			  value = "SELECT grade FROM Grade grade WHERE grade.schoolId = ?1 and grade.grade = ?2 and grade.active = true")
 	Grade findAllBySchoolIdAndGrade(Long schoolId, String grade);
 	
+	@Query(
+			  value = "SELECT gr.grade FROM Grade gr WHERE gr.schoolId = ?1 ORDER BY grade ASC")
 	List<Grade> findAllBySchoolId(Long schoolId);
 	
 	

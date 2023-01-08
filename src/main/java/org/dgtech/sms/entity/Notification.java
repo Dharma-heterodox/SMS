@@ -1,13 +1,16 @@
 package org.dgtech.sms.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Notification extends BaseEntity {
@@ -23,19 +26,27 @@ public class Notification extends BaseEntity {
 	private Long id;
 	@Column(length = 30)
 	private String notificationType;
+	@Column(length = 100)
 	private String fromAddr;
+	@Column(length = 100)
 	private String toAddr;
+	@Column(length = 100)
 	private String cc;
+	@Column(length = 100)
 	private String bcc;
 	@Lob
 	private String body;
+	@Column(length = 50)
 	private String status;
+	@Column(length = 100)
 	private String errorMessage;
-	private String response;
-	private String errorCode;
+	@Column(length = 100)
 	private String formName;
 	private Long referenceId;
 	private LocalDate msgDate;
+	
+	
+	private String listedGrades;
 	
 	public Long getId() {
 		return id;
@@ -45,6 +56,13 @@ public class Notification extends BaseEntity {
 	}
 	
 	
+	
+	public String getListedGrades() {
+		return listedGrades;
+	}
+	public void setListedGrades(String listedGrades) {
+		this.listedGrades = listedGrades;
+	}
 	public LocalDate getMsgDate() {
 		return msgDate;
 	}
@@ -87,12 +105,6 @@ public class Notification extends BaseEntity {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public String getResponse() {
-		return response;
-	}
-	public void setResponse(String response) {
-		this.response = response;
-	}
 	public String getStatus() {
 		return status;
 	}
@@ -104,12 +116,6 @@ public class Notification extends BaseEntity {
 	}
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-	}
-	public String getErrorCode() {
-		return errorCode;
-	}
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
 	}
 	public String getFormName() {
 		return formName;

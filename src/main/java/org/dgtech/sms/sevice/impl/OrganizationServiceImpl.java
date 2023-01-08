@@ -36,7 +36,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 			return null;
 		}
 		OrganizationDto organizationDto = mapper.map(org, OrganizationDto.class);
-		organizationDto.setGrades(gradeService.getAllGradesBySchoolId(organizationDto.getId()));
+//		organizationDto.setGrades(gradeService.getAllGradesBySchoolId(organizationDto.getId()));
 		return organizationDto;
 	}
 	

@@ -22,7 +22,9 @@ public class NotificationDto {
 	private String errorCode;
 	private String formName;
 	private Long referenceId;
-	private LocalDate msgDate;
+	private String msgDate;
+	private String createdBy;
+	private String stdSelected;
 	
 	public Long getId() {
 		return id;
@@ -31,10 +33,23 @@ public class NotificationDto {
 		this.id = id;
 	}
 	
-	public LocalDate getMsgDate() {
+	
+	public String getStdSelected() {
+		return stdSelected;
+	}
+	public void setStdSelected(String stdSelected) {
+		this.stdSelected = stdSelected;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public String getMsgDate() {
 		return msgDate;
 	}
-	public void setMsgDate(LocalDate msgDate) {
+	public void setMsgDate(String msgDate) {
 		this.msgDate = msgDate;
 	}
 	public String getNotificationType() {

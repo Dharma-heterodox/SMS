@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.ValidationException;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -24,10 +22,6 @@ import org.dgtech.sms.entity.User;
 import org.dgtech.sms.entity.employee.EmployeeReqErrors;
 import org.dgtech.sms.entity.employee.EmployeeRequest;
 import org.dgtech.sms.model.EmployeeDto;
-import org.dgtech.sms.model.GradeDto;
-import org.dgtech.sms.model.SectionDto;
-import org.dgtech.sms.model.SubjectDto;
-import org.dgtech.sms.model.TeacherMappingDto;
 import org.dgtech.sms.repo.EmployeeRepo;
 import org.dgtech.sms.repo.EmployeeRequestRepo;
 import org.dgtech.sms.sevice.EmployeeService;
@@ -39,7 +33,6 @@ import org.dgtech.sms.sevice.TeacherMappingService;
 import org.dgtech.sms.sevice.UserService;
 import org.dgtech.sms.util.Constant;
 import org.dgtech.sms.util.ErrorCodeV;
-import org.dgtech.sms.util.StringUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,55 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 
 	@Override
 	public EmployeeDto createEmployee(Long schoolId, EmployeeDto employeeDto) {
-		Employee existingEmployee = employeeRepo.getEmployeeByMobile(schoolId, employeeDto.getMobile());
-		if(existingEmployee != null) {
-			throw new ValidationException("Employee already exist for mobile :"+employeeDto.getMobile());
-		}
-		Employee employee = modelMapper.map(employeeDto, Employee.class);
-		//AddressDto addressDto = employeeDto.getAddress();
-		employee.setSchoolId(schoolId);
-		employee.setActive(true);
-		User user=createEmployeeAccount(employeeDto);
-		employee.setUserId(user.getUserId());
-		employee = employeeRepo.save(employee);
-		EmployeeDto updatedEmployeeDto =  modelMapper.map(employee, EmployeeDto.class);
-		GradeDto grade = null;
-		SubjectDto subject = null;
-		SectionDto section = null;
-		if(employee.getSubjectTaking() != null && employee.getSubjectTaking().length() > 0) {
-			subject = subjectService.getSubject(schoolId, null, employee.getSubjectTaking());
-			if(subject == null) {
-				subject = new SubjectDto();
-				subject.setSubjectName(StringUtil.fullCapitalize(employee.getSubjectTaking()));
-				subject.setActive(true);
-				subject = subjectService.createSubject(schoolId, subject);
-			}
-		}
-		if(employeeDto.getClassHandling() != null && employeeDto.getClassHandling().length() > 0) {
-			TeacherMappingDto teacherMapping = new TeacherMappingDto();
-			teacherMapping.setAcademicYear(Constant.lastAcademicYear);
-			teacherMapping.setClassTeacher(true);
-			String gradeName = StringUtil.getGrade(employeeDto.getClassHandling());
-			if(gradeName != null && !(gradeName.contains("KG") || gradeName.contains("K.G"))) {
-				gradeName = gradeName + " Std";
-			}
-			grade = gradeService.getByGrade(schoolId, gradeName);
-			section = sectionService.getBySection(schoolId, grade.getGrade(), StringUtil.getSection(employeeDto.getClassHandling()));
-//			teacherMapping.setGradeId(grade.getId());
-//			teacherMapping.setSectionId(section.getId());
-//			teacherMapping.setSubjectId(subject.getId());
-			teacherMapping.setTeacherId(employee.getId());
-			teacherMapping.setSection(section.getSection());
-			teacherMapping.setSubjectName(subject.getSubjectName());
-			teacherMapping.setGrade(grade.getGrade());
-			mappingService.createTeacherMapping(schoolId, teacherMapping);
-		}
 		
-		/*
-		 * if(addressDto != null && addressDto.getAddressLine1() != null) {
-		 * addressDto.setOrganizationId(employeeDto.getId());
-		 * addressService.createAddress(addressDto); }
-		 */
 		return employeeDto;
 	}
 	
@@ -301,12 +246,10 @@ public class EmployeeServiceImpl implements EmployeeService,FileUploads {
 		        			}
 		        			break;
 		        		case 9:
-		        			Date date = currentCell.getDateCellValue();
-							if (date == null || StringUtils.isEmpty(date)) {
+							if (cellValueStr == null || StringUtils.isEmpty(cellValueStr)) {
 								request.addErrorCode(new EmployeeReqErrors(ErrorCodeV.DOB_NOTEMPTY));
 							}else {
-								LocalDate localDate = new java.sql.Date(date.getTime()).toLocalDate();
-								request.setDob(localDate);
+								request.setDob(cellValueStr);
 							}
 		        			break;	
 		        		case 10:

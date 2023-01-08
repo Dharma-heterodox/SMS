@@ -42,7 +42,7 @@ public class Parent extends Person {
     private String religion;
     private String landLine;
     @OneToMany(cascade = CascadeType.ALL,mappedBy="parent",orphanRemoval = true)
-    private List<Student> childList=new ArrayList<Student>(); 
+    private List<Student> childList=new ArrayList<Student>(4); 
     @Column(length = 16)
     private String fatherAadhaarNo;
     @Column(length = 16)

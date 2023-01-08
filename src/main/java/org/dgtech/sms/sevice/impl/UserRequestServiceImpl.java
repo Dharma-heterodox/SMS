@@ -1,6 +1,7 @@
 package org.dgtech.sms.sevice.impl;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,7 +171,7 @@ public class UserRequestServiceImpl implements UserRequestService{
 						student.setCaste(req.getCaste());
 						student.setCasteCat(req.getCasteCat());
 						student.setDisplayName(req.getFirstName()+" "+req.getLastName());
-//						student.setDob(req.getDob());
+						student.setDob(LocalDate.parse(req.getDob(), Constant.dformatter));
 						student.setEmergencyContactNo(req.getAlternateMobile());
 						student.setEmisno(req.getEmisno());
 						student.setExamNo(req.getExamNo());
@@ -341,7 +342,7 @@ public class UserRequestServiceImpl implements UserRequestService{
 				emp.setCategory(getRoleName(req.getTypeOrder()).name());
 				emp.setDateOfJoin(req.getDoj());
 				emp.setDisplayName(req.getFirstName()+" "+req.getLastName());
-				emp.setDob(req.getDob());
+				emp.setDob(LocalDate.parse(req.getDob(),Constant.dformatter));
 				emp.setGender(req.getGender());
 				emp.setMobile(req.getMobile());
 				emp.setQualification(req.getQualification());

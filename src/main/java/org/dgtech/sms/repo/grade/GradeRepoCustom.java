@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface GradeRepoCustom {
 	
-	Map<String, String> getGradeMap(Long schoolId)throws Exception;
-	
+//	Map<String, String> getGradeMap(Long schoolId)throws Exception;
+//	
 	List<String> getGradeList(Long schoolId)throws Exception;
 
 }

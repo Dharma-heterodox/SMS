@@ -19,17 +19,17 @@ public class SectionRepoImpl implements SectionRepoCustom{
 	@PersistenceContext
 	private EntityManager em;
 	
-	 @Override
-	    public Map<String,String> getGradeSectionMap(Long schoolId)throws Exception{
-	    	Map<String, String> grSection=new HashMap<String, String>();
-			TypedQuery<Object[]> query=em.createQuery("SELECT sc.grade||'-'||sc.section,sc.section FROM Section sc where sc.schoolId=:schoolId", Object[].class);
-			query.setParameter("schoolId", String.valueOf(schoolId));
-			List<Object[]> results=query.getResultList();
-			results.forEach(h -> {
-				grSection.put((String)h[0],(String)h[1]);
-			});
-			return grSection;
-		}
+//	 @Override
+//	    public Map<String,String> getGradeSectionMap(Long schoolId)throws Exception{
+//	    	Map<String, String> grSection=new HashMap<String, String>();
+//			TypedQuery<Object[]> query=em.createQuery("SELECT sc.grade||'-'||sc.section,sc.section FROM Section sc where sc.schoolId=:schoolId", Object[].class);
+//			query.setParameter("schoolId", String.valueOf(schoolId));
+//			List<Object[]> results=query.getResultList();
+//			results.forEach(h -> {
+//				grSection.put((String)h[0],(String)h[1]);
+//			});
+//			return grSection;
+//		}
 	 
 	 @Override
 	 public List<String> getGradeSectionList(Long schoolId)throws Exception{

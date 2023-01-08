@@ -62,7 +62,7 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	    if(result != null && result.contains("Message GID")) { 
 	    	notification.setStatus(Constant.STATUS_SENT);
-	    	notification.setResponse(result);
+	    	notification.setErrorMessage(result);
 	    	updateNotification(notification);
 	    	return true;
 	    } else {

@@ -15,6 +15,7 @@ import org.dgtech.sms.sevice.StudentService;
 import org.dgtech.sms.sevice.TeacherMappingService;
 import org.dgtech.sms.sevice.UserAuthServices;
 import org.dgtech.sms.sevice.UserService;
+import org.dgtech.sms.util.Constant;
 import org.dgtech.sms.util.JwtTokenUtil;
 import org.dgtech.sms.util.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,17 +76,25 @@ public class LoginController {
     
     @PostMapping(value={"/pcUserLogin"})
     @ResponseStatus(HttpStatus.OK)
-    public PCAuthResponse pcUserAuthentication(@RequestBody LoginDto loginDto) throws SMSException, Exception{
+    public PCAuthResponse pcUserAuthentication(@RequestBody LoginDto loginDto) throws Exception{
     	System.out.println("--->"+loginDto.getUserId());
     	PCAuthObjects authObj = null;
     	PCAuthResponse respObj = null;
-    	Object[] userObjs = userAuthServices.loginPCUser(loginDto);
-    	if(userObjs == null) {
-    		throw new ValidationException("User not found");
+    	Object[] userObjs = null;
+    	try {
+    		userObjs = userAuthServices.loginPCUser(loginDto);
+        	if(userObjs == null) {
+        		throw new ValidationException("User not found");
+        	}
+        	respObj = (PCAuthResponse) userObjs[0];
+        	authObj = (PCAuthObjects) userObjs[1];
+        	userAuthServices.putUserInMap(authObj.getUserId(),authObj);
+        	respObj.setResponseCode(Constant.SUCCESS_REPS);
+    	}catch(SMSException |Exception sexp) {
+    		respObj=new PCAuthResponse();
+    		respObj.setResponseCode(Constant.FAILED_RESP);
+    		respObj.setErrorMsg(sexp.getMessage());
     	}
-    	respObj = (PCAuthResponse) userObjs[0];
-    	authObj = (PCAuthObjects) userObjs[1];
-    	userAuthServices.putUserInMap(authObj.getUserId(),authObj);
        	return respObj;
     }
 
