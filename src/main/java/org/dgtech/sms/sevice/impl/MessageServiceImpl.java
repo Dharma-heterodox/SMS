@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.dgtech.sms.entity.Messages;
 import org.dgtech.sms.entity.NotifyGrade;
+import org.dgtech.sms.model.MessagesDto;
 import org.dgtech.sms.model.NotificationDto;
-import org.dgtech.sms.repo.NotificationRepo;
 import org.dgtech.sms.repo.message.MessageRepo;
 import org.dgtech.sms.repo.notifygrade.NotifyGradesRepo;
 import org.dgtech.sms.sevice.MessageService;
@@ -15,6 +15,7 @@ import org.dgtech.sms.sevice.NotificationService;
 import org.dgtech.sms.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -22,8 +23,6 @@ public class MessageServiceImpl implements MessageService {
 	@Autowired
 	private NotificationService notificationService;
 	
-	@Autowired
-	private NotificationRepo notificationRepo;
 	
 	@Autowired
 	private MessageRepo messageRepo;
@@ -77,7 +76,8 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@Override
-	public int createMsg4App(NotificationDto dto) {
+	
+	public int createMsg4App(MessagesDto dto) {
 		int success = Constant.FAILED_RESP;
 		try {
 			Messages msgEntity=getMessagesEntity(dto);
@@ -92,8 +92,8 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@Override
-	public List<NotificationDto> getLast30Msg(String selGrade)throws Exception{
-		List<NotificationDto> dtoList=new ArrayList<NotificationDto>(32);
+	public List<MessagesDto> getLast30Msg(String selGrade)throws Exception{
+		List<MessagesDto> dtoList=new ArrayList<MessagesDto>(32);
 		String[] selectedGrade = null;
 		List<Long> ntgIds=null;
 		try {
@@ -106,17 +106,34 @@ public class MessageServiceImpl implements MessageService {
 		return dtoList;
 	}
 	
+//  Will get all msg for approval . Admin
+	@Override
+	public List<MessagesDto> msg4Approval()throws Exception{
+		List<MessagesDto> dtoList = new ArrayList<MessagesDto>();
+		return makeDtoList(dtoList, messageRepo.msg4Approval());
+		
+	}
 	
-	private Messages getMessagesEntity(NotificationDto dto)throws Exception{
+//	Update approved msg by Admin
+	@Override
+	@Transactional
+	public int approveMsgs(List<Long> ids)throws Exception{
+		int result = 0;
+		result = messageRepo.approveMsg(ids);
+		return result;
+	}
+	
+	
+	private Messages getMessagesEntity(MessagesDto dto)throws Exception{
 		Messages notify = new Messages();
 		String grades=dto.getStdSelected();
 		String[] listedGrades=null;
-		notify.setMsgBody(dto.getBody());
+		notify.setMsgBody(dto.getMsgBody());
 		notify.setCreatedBy(dto.getCreatedBy());
 		notify.setCreatedTime(LocalDateTime.now());
 		notify.setMsgDate(LocalDateTime.now());
 		notify.setListedGrades(grades);
-		notify.setDisplay(true);
+		notify.setDisplay(false);
 		if(grades!=null && grades.contains(",")) {
 			listedGrades=grades.split(",");
 			for(int i=0;i<listedGrades.length;i++) {
@@ -132,27 +149,22 @@ public class MessageServiceImpl implements MessageService {
 	private NotifyGrade makeNotifyGrade(String grade)throws Exception{
 		NotifyGrade gradeN=new NotifyGrade();
 			gradeN.setCreatedDate(LocalDateTime.now());
-			gradeN.setDisplay(true);
+			gradeN.setDisplay(false);
 			gradeN.setGrade(grade);
 		return gradeN;
 		
 	}
 	
-	private List<Long> getMsgIds(List<NotifyGrade> grds)throws Exception{
-		List<Long> ids=new ArrayList<Long>();
-			grds.forEach(h -> {
-				ids.add(h.getMessageId());
-			});
-		return ids;
-	}
 	
-	private List<NotificationDto> makeDtoList(List<NotificationDto> dtoList,
+	private List<MessagesDto> makeDtoList(List<MessagesDto> dtoList,
 			List<Messages> entity)	throws Exception{
 		entity.forEach(h ->{
-			NotificationDto dto=new NotificationDto();
-			dto.setBody(h.getMsgBody());
+			MessagesDto dto=new MessagesDto();
+			dto.setMsgBody(h.getMsgBody());
 			dto.setMsgDate(Constant.dformatter.format(h.getMsgDate()));
 			dto.setId(h.getId());
+			dto.setCreatedBy(h.getCreatedBy());
+			dto.setStdSelected(h.getListedGrades());
 			dtoList.add(dto);
 		});
 		return dtoList;

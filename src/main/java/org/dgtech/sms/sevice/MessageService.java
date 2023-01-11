@@ -2,13 +2,17 @@ package org.dgtech.sms.sevice;
 
 import java.util.List;
 
-import org.dgtech.sms.model.NotificationDto;
+import org.dgtech.sms.model.MessagesDto;
 
 public interface MessageService {
 	
-	int createMsg4App(NotificationDto dto);
+	int createMsg4App(MessagesDto dto);
 	
-	List<NotificationDto> getLast30Msg(String selGrade)throws Exception;
+	List<MessagesDto> getLast30Msg(String selGrade)throws Exception;
+	
+	int approveMsgs(List<Long> ids)throws Exception;
+	
+	List<MessagesDto> msg4Approval()throws Exception;
 	
 
 }

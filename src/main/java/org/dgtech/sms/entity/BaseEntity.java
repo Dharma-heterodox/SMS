@@ -19,7 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 //@Filters(
 //        @Filter(name = BaseEntity.TENANT_FILTER, condition = BaseEntity.TENANT_ID+" = :"+BaseEntity.TENANT_ID_PARAM)
 //)
-//@MappedSuperclass
+@MappedSuperclass
 //@EntityListeners(TenantEntityListener.class)
 public class BaseEntity implements Serializable {
 	

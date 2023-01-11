@@ -2,7 +2,8 @@ package org.dgtech.sms.controller;
 
 import java.util.List;
 
-import org.dgtech.sms.model.NotificationDto;
+import org.dgtech.sms.model.AuthorizeDto;
+import org.dgtech.sms.model.MessagesDto;
 import org.dgtech.sms.sevice.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,15 +25,42 @@ public class MessageController {
 	
 	@GetMapping(value = "/pc/{grade}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public List<NotificationDto> getPCUserMsg(@PathVariable("grade")String selGrade)throws Exception{
+	public List<MessagesDto> getPCUserMsg(@PathVariable("grade")String selGrade)throws Exception{
 		return msgService.getLast30Msg(selGrade);
 	}
 	
 	
 	@PostMapping(value = "/tc/create")
 	@ResponseStatus(code = HttpStatus.OK)
-	public String createMsg(@RequestBody NotificationDto dto)throws Exception{
-		msgService.createMsg4App(dto);
+	public String createMsg(@RequestBody MessagesDto dto){
+		try {
+			msgService.createMsg4App(dto);
+		}catch(Exception ex) {
+			return "Failed";
+		}
+		return "Success";
+	}
+	
+	@GetMapping(value = "/tc/msg4app")
+	@ResponseStatus(code = HttpStatus.OK)
+	public List<MessagesDto> getMsg4Approval(){
+		try {
+			return msgService.msg4Approval();
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
+	@PostMapping(value = "/tc/approvemsg")
+	@ResponseStatus(code = HttpStatus.OK)
+	public String approveMsg(@RequestBody AuthorizeDto dto) {
+		try {
+			msgService.approveMsgs(dto.getIds());
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			return "Failed";
+		}
 		return "Success";
 	}
 
